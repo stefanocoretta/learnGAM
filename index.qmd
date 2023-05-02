@@ -1,0 +1,8 @@
+---
+title: "Learn Generalised Additive (Mixed) Models"
+---
+
+Welcome! This is the website of the workshop *Learn Generalised Additive (Mixed) Models*.
+
+Head off to the [Set-up](setup.qmd) page for pre-workshop installation instructions.
+

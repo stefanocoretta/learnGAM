@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: docs
+  execute-dir: project
+  render:
+    - "*.qmd"
+    - "!data/"
+  resources:
+    - "slides/"
+    # - "img/"
+    - "data/"
+
+website:
+  title: "learnGAM"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: setup.qmd
+        text: Set-up
+      - text: Slides
+        menu:
+          - href: "slides/short/"
+            text: "Short course"
+      - href: extra.qmd
+        text: Extra
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
+
+
+

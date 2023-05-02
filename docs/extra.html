@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>learnGAM - Extra</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">learnGAM</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./setup.html">
+ <span class="menu-text">Set-up</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Slides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+        <li>
+    <a class="dropdown-item" href="./slides/short/">
+ <span class="dropdown-text">Short course</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="./extra.html" aria-current="page">
+ <span class="menu-text">Extra</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tutorials" id="toc-tutorials" class="nav-link active" data-scroll-target="#tutorials">Tutorials</a></li>
+  <li><a href="#book" id="toc-book" class="nav-link" data-scroll-target="#book">Book</a></li>
+  <li><a href="#gams-in-linguistic-research" id="toc-gams-in-linguistic-research" class="nav-link" data-scroll-target="#gams-in-linguistic-research">GAMs in linguistic research</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Extra</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="tutorials" class="level2">
+<h2 class="anchored" data-anchor-id="tutorials">Tutorials</h2>
+<p>I recommend the following tutorials to revise the content of the workshop and for further details of fitting GAMs:</p>
+<ul>
+<li>Sóskuthy, Márton. 2017. <strong>Generalised additive mixed models for dynamic analysis in linguistics: a practical introduction.</strong> <a href="https://doi.org/10.48550/arXiv.1703.05339" class="uri">https://doi.org/10.48550/arXiv.1703.05339</a></li>
+<li>Sóskuthy, Márton. 2021. <strong>Evaluating generalised additive mixed modelling strategies for dynamic speech analysis.</strong> <a href="https://doi.org/10.1016/j.wocn.2020.101017" class="uri">https://doi.org/10.1016/j.wocn.2020.101017</a></li>
+<li>Pedersen, Eric et al.&nbsp;2019. <strong>Hierarchical generalized additive models in ecology: an introduction with mgcv.</strong> <a href="https://doi.org/10.7717/peerj.6876" class="uri">https://doi.org/10.7717/peerj.6876</a></li>
+</ul>
+<p>See also:</p>
+<ul>
+<li>Tamminga, Meredith et al.&nbsp;2016. <strong>Generalized additive mixed models for intraspeaker variation</strong>. <a href="https://doi.org/10.1515/lingvan-2016-0030" class="uri">https://doi.org/10.1515/lingvan-2016-0030</a></li>
+<li>Winter, Bodo et al.&nbsp;2016. <strong>How to analyze linguistic change using mixed models, growth curve analysis and generalized additive modeling</strong>. <a href="https://doi.org/10.1093/jole/lzv003" class="uri">https://doi.org/10.1093/jole/lzv003</a></li>
+<li>Wieling, Martijn. 2018. <strong>Analyzing dynamic phonetic data using generalized additive mixed modeling: a tutorial focusing on articulatory differences between L1 and L2 speakers of English.</strong> <a href="https://www.sciencedirect.com/science/article/abs/pii/S0095447017301377" class="uri">https://www.sciencedirect.com/science/article/abs/pii/S0095447017301377</a></li>
+</ul>
+<p>Other tutorials.</p>
+<ul>
+<li>Noam, Ross. <strong>GAMs in R: A free, interactive course using mgcv.</strong> <a href="https://noamross.github.io/gams-in-r-course/" class="uri">https://noamross.github.io/gams-in-r-course/</a></li>
+<li>Clark, Michael. <strong>Generalised Additive Models.</strong> <a href="https://m-clark.github.io/generalized-additive-models/" class="uri">https://m-clark.github.io/generalized-additive-models/</a></li>
+</ul>
+</section>
+<section id="book" class="level2">
+<h2 class="anchored" data-anchor-id="book">Book</h2>
+<p>If you have an undergraduate degree in maths or similar (no joke!):</p>
+<ul>
+<li>Wood, Simon. 2017. <strong>Generalized additive models: an introduction with R.</strong> <a href="https://www.taylorfrancis.com/books/mono/10.1201/9781315370279/generalized-additive-models-simon-wood" class="uri">https://www.taylorfrancis.com/books/mono/10.1201/9781315370279/generalized-additive-models-simon-wood</a></li>
+</ul>
+</section>
+<section id="gams-in-linguistic-research" class="level2">
+<h2 class="anchored" data-anchor-id="gams-in-linguistic-research">GAMs in linguistic research</h2>
+<p>Some linguistics papers that use GAMs:</p>
+<ul>
+<li>Coretta, Stefano. 2020. <strong>Longer vowel duration correlates with greater tongue root advancement at vowel offset: acoustic and articulatory data from Italian and Polish.</strong>. <a href="https://asa.scitation.org/doi/10.1121/10.0000556" class="uri">https://asa.scitation.org/doi/10.1121/10.0000556</a></li>
+<li>Cameron-Faulkner, Thea et al.&nbsp;2020. <strong>A cross-cultural analysis of early prelinguistic gesture development and its relationship to language development.</strong> <a href="https://doi.org/10.1111/cdev.13406" class="uri">https://doi.org/10.1111/cdev.13406</a>.</li>
+<li>Oschkinat, Miriam et al.&nbsp;2020. <strong>Compensation to real-time temporal auditory feedback perturbation depends on syllable position</strong>. <a href="https://doi.org/10.1121/10.0001765" class="uri">https://doi.org/10.1121/10.0001765</a></li>
+<li>Los, Bettelou et al.&nbsp;2023. <strong>The decline of local anchoring: A quantitative investigation</strong>. <a href="https://www.doi.org/10.1017/S1360674323000047" class="uri">https://www.doi.org/10.1017/S1360674323000047</a></li>
+<li>…</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
