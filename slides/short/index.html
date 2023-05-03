@@ -38,6 +38,595 @@ class: center, middle, inverse, title-slide
 
 
 
+
+## Outline
+
+---
+
+## Generalised additive models
+
+* **G**enrealised **A**dditive **M**odel**s** (GAMs)
+
+* `\(y = f(x)\)`
+    * `\(f(x)\)` = some function of `\(x\)` (or *smooth function*)
+
+---
+
+## Smooth terms
+
+* LMs have only **parametric terms**
+
+    * `f0 ~ vowel + voicing + duration`
+    
+    * Parametric terms fit linear effects.
+
+--
+
+* GAMs add (non-parametric) **smooth terms** (or simply smooths, also smoothers):
+
+    * `f0 ~ vowel + voicing + s(duration)`
+    
+    * `f(x)`: *some function of `\(x\)`*.
+    
+    * Smooth terms fit non-linear effects.
+
+--
+
+&lt;br&gt;
+
+```r
+library(mgcv)
+gam(y ~ s(x), data)
+```
+
+The model: `\(y\)` as *some* function of `\(x\)`
+
+---
+
+layout: true
+
+## Pupil size
+
+---
+
+Overview of study
+
+---
+
+
+```r
+pdq_20 &lt;- readRDS("data/pdq_20.rds") %&gt;%
+  mutate(
+    Condition = factor(Condition, levels = c("Sparse", "Dense")),
+    Age = factor(Age, levels = c("YA", "OA")),
+    pupil_z = scale(pupil.binned)
+  )
+
+pdq_20
+```
+
+```
+## # A tibble: 88,008 × 8
+##    subject trial Condition Age   timebins Soundfile            pupil.binned pupil_z[,1]
+##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;       &lt;dbl&gt;
+##  1       1     1 Sparse    YA        -500 NAMword_675_Mule.wav       84.5       0.00347
+##  2       1     1 Sparse    YA        -480 NAMword_675_Mule.wav       75.8      -0.0239 
+##  3       1     1 Sparse    YA        -460 NAMword_675_Mule.wav       65.4      -0.0570 
+##  4       1     1 Sparse    YA        -440 NAMword_675_Mule.wav       54.3      -0.0922 
+##  5       1     1 Sparse    YA        -420 NAMword_675_Mule.wav       35.7      -0.151  
+##  6       1     1 Sparse    YA        -400 NAMword_675_Mule.wav       20.2      -0.200  
+##  7       1     1 Sparse    YA        -380 NAMword_675_Mule.wav        8.72     -0.237  
+##  8       1     1 Sparse    YA        -360 NAMword_675_Mule.wav        0.680    -0.262  
+##  9       1     1 Sparse    YA        -340 NAMword_675_Mule.wav      -11.4      -0.300  
+## 10       1     1 Sparse    YA        -320 NAMword_675_Mule.wav      -23.3      -0.338  
+## # ℹ 87,998 more rows
+```
+
+---
+
+
+```r
+pdq_20 %&gt;%
+  ggplot(aes(timebins, pupil_z)) +
+  geom_point(alpha = 0.01) +
+  facet_grid(Condition ~ Age)
+```
+
+&lt;img src="index_files/figure-html/pdq-traj-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## A simple GAM
+
+---
+
+
+```r
+pdq_gam &lt;- bam(
+  pupil_z ~
+    s(timebins),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+summary(pdq_gam)
+```
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## pupil_z ~ s(timebins)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 0.001098   0.003317   0.331    0.741
+## 
+## Approximate significance of smooth terms:
+##               edf Ref.df     F p-value
+## s(timebins) 8.466  8.919 326.9  &lt;2e-16
+## 
+## R-sq.(adj) =  0.0321   Deviance explained = 3.22%
+## fREML = 1.2347e+05  Scale est. = 0.96794   n = 88008
+```
+
+---
+
+
+```r
+predict_gam(pdq_gam)
+```
+
+```
+## # A tibble: 11 × 5
+##    timebins   pupil_z        se  lower_ci  upper_ci
+##       &lt;dbl&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt;
+##  1     -500  -0.258     0.0187    -0.295  -0.221   
+##  2     -116  -0.272     0.0104    -0.292  -0.252   
+##  3      268  -0.229     0.00979   -0.248  -0.210   
+##  4      652  -0.0209    0.00957   -0.0396 -0.00212 
+##  5     1036   0.227     0.00944    0.209   0.246   
+##  6     1420   0.285     0.00939    0.267   0.304   
+##  7     1804   0.152     0.00944    0.134   0.171   
+##  8     2188   0.0369    0.00957    0.0182  0.0557  
+##  9     2572   0.00349   0.00979   -0.0157  0.0227  
+## 10     2956  -0.0269    0.0104    -0.0472 -0.00661 
+## 11     3340  -0.0377    0.0187    -0.0744 -0.000939
+```
+
+---
+
+
+```r
+predict_gam(pdq_gam) %&gt;%
+  plot(series = "timebins")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+predict_gam(pdq_gam, length_out = 100) %&gt;%
+  plot(series = "timebins")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-plot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## Number of knots `k`
+
+---
+
+* The "wiggliness" of the resulting spline is partially constrained by the number of *knots* `k`.
+
+* The more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.
+
+--
+
+* You can set the number of knots `k` with the argument `k` in `s()`.
+
+&lt;br&gt;
+
+
+```r
+pdq_gam_2 &lt;- bam(
+  pupil_z ~
+    s(timebins, k = 3),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+predict_gam(pdq_gam_2, length_out = 25) %&gt;%
+  plot(series = "timebins")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-2-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+pdq_gam_2 &lt;- bam(
+  pupil_z ~
+    s(timebins, k = 20),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+predict_gam(pdq_gam_2, length_out = 100) %&gt;%
+  plot(series = "timebins")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-2-2-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## Comparing groups
+
+---
+
+To use `by`-variables with ordered factors:
+
+* Change factor to an **ordered factor**.
+
+* Change factor contrast to **treatment contrast** (`contr.treatment`).
+    * The default in ordered factors is `contr.poly`, this won't work.
+    
+* Include the factor as a **parametric term**.
+
+* Include a **reference smooth** and a **difference smooth** with the `by`-variable.
+
+---
+
+
+```r
+pdq_20 &lt;- pdq_20 %&gt;%
+  mutate(
+    Condition_o = as.ordered(Condition),
+    Age_o = as.ordered(Age)
+  )
+
+contrasts(pdq_20$Condition_o) &lt;- "contr.treatment"
+contrasts(pdq_20$Age_o) &lt;- "contr.treatment"
+```
+
+
+---
+
+
+```r
+pdq_gam_3 &lt;- bam(
+  pupil_z ~
+    # Parametric term
+    Age_o +
+    # Reference smooth (Age_0 == "YA")
+    s(timebins, k = 20) +
+    # Difference smooth
+    s(timebins, by = Age_o, k = 20),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+summary(pdq_gam_3)
+```
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## pupil_z ~ Age_o + s(timebins, k = 20) + s(timebins, by = Age_o, 
+##     k = 20)
+## 
+## Parametric coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  0.029495   0.004512   6.537  6.3e-11
+## Age_oOA     -0.061473   0.006648  -9.247  &lt; 2e-16
+## 
+## Approximate significance of smooth terms:
+##                        edf Ref.df       F p-value
+## s(timebins)         11.985 14.367 138.640  &lt;2e-16
+## s(timebins):Age_oOA  7.397  9.139   8.446  &lt;2e-16
+## 
+## R-sq.(adj) =  0.0339   Deviance explained = 3.41%
+## fREML = 1.234e+05  Scale est. = 0.96609   n = 88008
+```
+
+---
+
+
+```r
+predict_gam(pdq_gam_3, length_out = 100) %&gt;%
+  plot(series = "timebins", comparison = "Age_o")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-3-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+get_difference(
+  pdq_gam_3, series = "timebins", length_out = 100,
+  compare = list(Age_o = c("OA", "YA"))) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-3-diff-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## Random effects
+
+---
+
+* Only **fixed effects** so far...
+
+* **G**eneralised **A**dditive **M**ixed **M**odel (GAMM)
+
+* Two ways of including random effects:
+
+  * Use the `"re"` basis function for random intercept and slopes.
+
+  * Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
+
+---
+
+* **Factor smooth interaction**:
+    * `bs = "fs"`.
+    * A smooth is fitted at each level of a factor.
+
+* The random effect variable *needs to be a factor*.
+
+* `s(Trial, Subject, bs = "fs", m = 1)`
+
+---
+
+
+```r
+pdq_20 &lt;- pdq_20 %&gt;%
+  mutate(
+    subject = as.factor(subject)
+  )
+pdq_20
+```
+
+```
+## # A tibble: 88,008 × 10
+##    subject trial Condition Age   timebins Soundfile          pupil.binned pupil_z[,1] Condition_o Age_o
+##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;       &lt;dbl&gt; &lt;ord&gt;       &lt;ord&gt;
+##  1 1           1 Sparse    YA        -500 NAMword_675_Mule.…       84.5       0.00347 Sparse      YA   
+##  2 1           1 Sparse    YA        -480 NAMword_675_Mule.…       75.8      -0.0239  Sparse      YA   
+##  3 1           1 Sparse    YA        -460 NAMword_675_Mule.…       65.4      -0.0570  Sparse      YA   
+##  4 1           1 Sparse    YA        -440 NAMword_675_Mule.…       54.3      -0.0922  Sparse      YA   
+##  5 1           1 Sparse    YA        -420 NAMword_675_Mule.…       35.7      -0.151   Sparse      YA   
+##  6 1           1 Sparse    YA        -400 NAMword_675_Mule.…       20.2      -0.200   Sparse      YA   
+##  7 1           1 Sparse    YA        -380 NAMword_675_Mule.…        8.72     -0.237   Sparse      YA   
+##  8 1           1 Sparse    YA        -360 NAMword_675_Mule.…        0.680    -0.262   Sparse      YA   
+##  9 1           1 Sparse    YA        -340 NAMword_675_Mule.…      -11.4      -0.300   Sparse      YA   
+## 10 1           1 Sparse    YA        -320 NAMword_675_Mule.…      -23.3      -0.338   Sparse      YA   
+## # ℹ 87,998 more rows
+```
+
+
+---
+
+
+```r
+pdq_gam_4 &lt;- bam(
+  pupil_z ~
+    Age_o +
+    s(timebins, k = 20) +
+    s(timebins, by = Age_o, k = 20) +
+    s(timebins, subject, bs = "fs", m = 1),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+summary(pdq_gam_4)
+```
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## pupil_z ~ Age_o + s(timebins, k = 20) + s(timebins, by = Age_o, 
+##     k = 20) + s(timebins, subject, bs = "fs", m = 1)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  0.02904    0.06406   0.453    0.650
+## Age_oOA     -0.06098    0.09061  -0.673    0.501
+## 
+## Approximate significance of smooth terms:
+##                         edf  Ref.df      F p-value
+## s(timebins)          11.168  13.456  8.981  &lt;2e-16
+## s(timebins):Age_oOA   1.124   1.144  0.014   0.973
+## s(timebins,subject) 144.184 178.000 33.754  &lt;2e-16
+## 
+## R-sq.(adj) =  0.0952   Deviance explained = 9.68%
+## fREML = 1.2073e+05  Scale est. = 0.9048    n = 88008
+```
+
+---
+
+
+```r
+predict_gam(pdq_gam_4, length_out = 100, exclude_terms = "s(timebins,subject)") %&gt;%
+  plot(series = "timebins", comparison = "Age_o")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-4-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+predict_gam(pdq_gam_4, length_out = 100, values = c(Age_o = "YA")) %&gt;%
+  # filter only YA subjects
+  filter(subject %in% c(1:10)) %&gt;%
+  plot(series = "timebins")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-4-plot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## Comparing across groups (interactions)
+
+---
+
+* Technically, GAMs **don't allow interactions**.
+
+  * They are ADDITIVE (interactions require multiplication).
+
+--
+
+* We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+
+---
+
+Let's create a factor interaction between `Age_o` and `Condition_o`.
+
+We also need to make it into an ordered factor with treatment contrasts.
+
+
+```r
+pdq_20 &lt;- pdq_20 %&gt;%
+  mutate(
+    Age_Cond = as.ordered(interaction(Age_o, Condition_o))
+  )
+
+contrasts(pdq_20$Age_Cond) &lt;- "contr.treatment"
+```
+
+---
+
+
+```r
+pdq_gam_5 &lt;- bam(
+  pupil_z ~
+    Age_Cond +
+    s(timebins, k = 20) +
+    s(timebins, by = Age_Cond, k = 20) +
+    s(timebins, subject, bs = "fs", m = 1),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+summary(pdq_gam_5)
+```
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## pupil_z ~ Age_Cond + s(timebins, k = 20) + s(timebins, by = Age_Cond, 
+##     k = 20) + s(timebins, subject, bs = "fs", m = 1)
+## 
+## Parametric coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)        0.003526   0.064261   0.055    0.956
+## Age_CondOA.Sparse -0.036832   0.090907  -0.405    0.685
+## Age_CondYA.Dense   0.047145   0.008803   5.356 8.54e-08
+## Age_CondOA.Dense  -0.034121   0.090892  -0.375    0.707
+## 
+## Approximate significance of smooth terms:
+##                                   edf  Ref.df      F  p-value
+## s(timebins)                    11.184  13.466  8.625  &lt; 2e-16
+## s(timebins):Age_CondOA.Sparse   1.000   1.000  0.017    0.896
+## s(timebins):Age_CondYA.Dense    4.828   6.013  4.894 5.43e-05
+## s(timebins):Age_CondOA.Dense    1.445   1.757  0.245    0.748
+## s(timebins,subject)           144.284 178.000 33.809  &lt; 2e-16
+## 
+## R-sq.(adj) =  0.0958   Deviance explained = 9.75%
+## fREML = 1.2072e+05  Scale est. = 0.90421   n = 88008
+```
+
+
+---
+
+
+```r
+predict_gam(pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)") %&gt;%
+  plot(series = "timebins", comparison = "Age_Cond")
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-5-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+predict_gam(
+  pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)",
+  separate = list(Age_Cond = c("Age", "Condition"))) %&gt;%
+  plot(series = "timebins", comparison = "Condition") +
+  facet_grid(~ Age)
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-5-plot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+get_difference(
+  pdq_gam_5, series = "timebins", length_out = 100, exclude_terms = "s(timebins,subject)",
+  compare = list(Age_Cond = c("YA.Dense", "YA.Sparse"))) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-5-diff-1.png" width="60%" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

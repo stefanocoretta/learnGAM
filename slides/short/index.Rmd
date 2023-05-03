@@ -36,6 +36,11 @@ use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
 options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
 options(show.signif.stars = FALSE)
+
+library(tidyverse)
+theme_set(theme_minimal())
+library(mgcv)
+library(tidygam)
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -43,3 +48,395 @@ library(xaringanthemer)
 style_mono_light(outfile = "slides/short/xaringan-themer.css")
 ```
 
+
+## Outline
+
+---
+
+## Generalised additive models
+
+* **G**enrealised **A**dditive **M**odel**s** (GAMs)
+
+* $y = f(x)$
+    * $f(x)$ = some function of $x$ (or *smooth function*)
+
+---
+
+## Smooth terms
+
+* LMs have only **parametric terms**
+
+    * `f0 ~ vowel + voicing + duration`
+    
+    * Parametric terms fit linear effects.
+
+--
+
+* GAMs add (non-parametric) **smooth terms** (or simply smooths, also smoothers):
+
+    * `f0 ~ vowel + voicing + s(duration)`
+    
+    * `f(x)`: *some function of $x$*.
+    
+    * Smooth terms fit non-linear effects.
+
+--
+
+<br>
+
+```r
+library(mgcv)
+gam(y ~ s(x), data)
+```
+
+The model: $y$ as *some* function of $x$
+
+---
+
+layout: true
+
+## Pupil size
+
+---
+
+Overview of study
+
+---
+
+```{r pdq}
+pdq_20 <- readRDS("data/pdq_20.rds") %>%
+  mutate(
+    Condition = factor(Condition, levels = c("Sparse", "Dense")),
+    Age = factor(Age, levels = c("YA", "OA")),
+    pupil_z = scale(pupil.binned)
+  )
+
+pdq_20
+```
+
+---
+
+```{r pdq-traj}
+pdq_20 %>%
+  ggplot(aes(timebins, pupil_z)) +
+  geom_point(alpha = 0.01) +
+  facet_grid(Condition ~ Age)
+```
+
+---
+
+layout: false
+layout: true
+
+## A simple GAM
+
+---
+
+```{r pdq-gam, cache=TRUE}
+pdq_gam <- bam(
+  pupil_z ~
+    s(timebins),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-sum}
+summary(pdq_gam)
+```
+
+---
+
+```{r pdq-gam-pred}
+predict_gam(pdq_gam)
+```
+
+---
+
+```{r pdq-gam-plot}
+predict_gam(pdq_gam) %>%
+  plot(series = "timebins")
+```
+
+---
+
+```{r pdq-gam-plot-2}
+predict_gam(pdq_gam, length_out = 100) %>%
+  plot(series = "timebins")
+```
+
+---
+
+layout: false
+layout: true
+
+## Number of knots `k`
+
+---
+
+* The "wiggliness" of the resulting spline is partially constrained by the number of *knots* `k`.
+
+* The more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.
+
+--
+
+* You can set the number of knots `k` with the argument `k` in `s()`.
+
+<br>
+
+```{r pdq-gam-2, cache=TRUE}
+pdq_gam_2 <- bam(
+  pupil_z ~
+    s(timebins, k = 3),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-2-plot}
+predict_gam(pdq_gam_2, length_out = 25) %>%
+  plot(series = "timebins")
+```
+
+---
+
+```{r pdq-gam-2-2, cache=TRUE}
+pdq_gam_2 <- bam(
+  pupil_z ~
+    s(timebins, k = 20),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-2-2-plot}
+predict_gam(pdq_gam_2, length_out = 100) %>%
+  plot(series = "timebins")
+```
+
+---
+
+layout: false
+layout: true
+
+## Comparing groups
+
+---
+
+To use `by`-variables with ordered factors:
+
+* Change factor to an **ordered factor**.
+
+* Change factor contrast to **treatment contrast** (`contr.treatment`).
+    * The default in ordered factors is `contr.poly`, this won't work.
+    
+* Include the factor as a **parametric term**.
+
+* Include a **reference smooth** and a **difference smooth** with the `by`-variable.
+
+---
+
+```{r pbq-ord}
+pdq_20 <- pdq_20 %>%
+  mutate(
+    Condition_o = as.ordered(Condition),
+    Age_o = as.ordered(Age)
+  )
+
+contrasts(pdq_20$Condition_o) <- "contr.treatment"
+contrasts(pdq_20$Age_o) <- "contr.treatment"
+```
+
+
+---
+
+```{r pdq-gam-3, cache=TRUE}
+pdq_gam_3 <- bam(
+  pupil_z ~
+    # Parametric term
+    Age_o +
+    # Reference smooth (Age_0 == "YA")
+    s(timebins, k = 20) +
+    # Difference smooth
+    s(timebins, by = Age_o, k = 20),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-3-sum}
+summary(pdq_gam_3)
+```
+
+---
+
+```{r pdq-gam-3-plot}
+predict_gam(pdq_gam_3, length_out = 100) %>%
+  plot(series = "timebins", comparison = "Age_o")
+```
+
+---
+
+```{r pdq-gam-3-diff}
+get_difference(
+  pdq_gam_3, series = "timebins", length_out = 100,
+  compare = list(Age_o = c("OA", "YA"))) %>%
+  plot()
+```
+
+---
+
+layout: false
+layout: true
+
+## Random effects
+
+---
+
+* Only **fixed effects** so far...
+
+* **G**eneralised **A**dditive **M**ixed **M**odel (GAMM)
+
+* Two ways of including random effects:
+
+  * Use the `"re"` basis function for random intercept and slopes.
+
+  * Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
+
+---
+
+* **Factor smooth interaction**:
+    * `bs = "fs"`.
+    * A smooth is fitted at each level of a factor.
+
+* The random effect variable *needs to be a factor*.
+
+* `s(Trial, Subject, bs = "fs", m = 1)`
+
+---
+
+```{r pdq-fac}
+pdq_20 <- pdq_20 %>%
+  mutate(
+    subject = as.factor(subject)
+  )
+pdq_20
+```
+
+
+---
+
+```{r pdq-gam-4, cache=TRUE}
+pdq_gam_4 <- bam(
+  pupil_z ~
+    Age_o +
+    s(timebins, k = 20) +
+    s(timebins, by = Age_o, k = 20) +
+    s(timebins, subject, bs = "fs", m = 1),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-4-sum}
+summary(pdq_gam_4)
+```
+
+---
+
+```{r pdq-gam-4-plot}
+predict_gam(pdq_gam_4, length_out = 100, exclude_terms = "s(timebins,subject)") %>%
+  plot(series = "timebins", comparison = "Age_o")
+```
+
+---
+
+```{r pdq-gam-4-plot-2}
+predict_gam(pdq_gam_4, length_out = 100, values = c(Age_o = "YA")) %>%
+  # filter only YA subjects
+  filter(subject %in% c(1:10)) %>%
+  plot(series = "timebins")
+```
+
+---
+
+layout: false
+layout: true
+
+## Comparing across groups (interactions)
+
+---
+
+* Technically, GAMs **don't allow interactions**.
+
+  * They are ADDITIVE (interactions require multiplication).
+
+--
+
+* We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+
+---
+
+Let's create a factor interaction between `Age_o` and `Condition_o`.
+
+We also need to make it into an ordered factor with treatment contrasts.
+
+```{r pdq-int}
+pdq_20 <- pdq_20 %>%
+  mutate(
+    Age_Cond = as.ordered(interaction(Age_o, Condition_o))
+  )
+
+contrasts(pdq_20$Age_Cond) <- "contr.treatment"
+```
+
+---
+
+```{r pdq-gam-5, cache=TRUE}
+pdq_gam_5 <- bam(
+  pupil_z ~
+    Age_Cond +
+    s(timebins, k = 20) +
+    s(timebins, by = Age_Cond, k = 20) +
+    s(timebins, subject, bs = "fs", m = 1),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-5-sum}
+summary(pdq_gam_5)
+```
+
+
+---
+
+```{r pdq-gam-5-plot}
+predict_gam(pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)") %>%
+  plot(series = "timebins", comparison = "Age_Cond")
+```
+
+---
+
+```{r pdq-gam-5-plot-2}
+predict_gam(
+  pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)",
+  separate = list(Age_Cond = c("Age", "Condition"))) %>%
+  plot(series = "timebins", comparison = "Condition") +
+  facet_grid(~ Age)
+```
+
+---
+
+```{r pdq-gam-5-diff}
+get_difference(
+  pdq_gam_5, series = "timebins", length_out = 100, exclude_terms = "s(timebins,subject)",
+  compare = list(Age_Cond = c("YA.Dense", "YA.Sparse"))) %>%
+  plot()
+```
