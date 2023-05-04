@@ -144,18 +144,18 @@ pdq_20
 
 ```
 ## # A tibble: 88,008 × 8
-##    subject trial Condition Age   timebins Soundfile            pupil.binned  pupil_z
-##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;    &lt;dbl&gt;
-##  1       1     1 Sparse    YA        -500 NAMword_675_Mule.wav       84.5    0.00347
-##  2       1     1 Sparse    YA        -480 NAMword_675_Mule.wav       75.8   -0.0239 
-##  3       1     1 Sparse    YA        -460 NAMword_675_Mule.wav       65.4   -0.0570 
-##  4       1     1 Sparse    YA        -440 NAMword_675_Mule.wav       54.3   -0.0922 
-##  5       1     1 Sparse    YA        -420 NAMword_675_Mule.wav       35.7   -0.151  
-##  6       1     1 Sparse    YA        -400 NAMword_675_Mule.wav       20.2   -0.200  
-##  7       1     1 Sparse    YA        -380 NAMword_675_Mule.wav        8.72  -0.237  
-##  8       1     1 Sparse    YA        -360 NAMword_675_Mule.wav        0.680 -0.262  
-##  9       1     1 Sparse    YA        -340 NAMword_675_Mule.wav      -11.4   -0.300  
-## 10       1     1 Sparse    YA        -320 NAMword_675_Mule.wav      -23.3   -0.338  
+##    subject trial Condition Age   timebins Soundfile          pupil.binned  pupil_z
+##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;    &lt;dbl&gt;
+##  1       1     1 Sparse    YA        -500 NAMword_675_Mule.…       84.5    0.00347
+##  2       1     1 Sparse    YA        -480 NAMword_675_Mule.…       75.8   -0.0239 
+##  3       1     1 Sparse    YA        -460 NAMword_675_Mule.…       65.4   -0.0570 
+##  4       1     1 Sparse    YA        -440 NAMword_675_Mule.…       54.3   -0.0922 
+##  5       1     1 Sparse    YA        -420 NAMword_675_Mule.…       35.7   -0.151  
+##  6       1     1 Sparse    YA        -400 NAMword_675_Mule.…       20.2   -0.200  
+##  7       1     1 Sparse    YA        -380 NAMword_675_Mule.…        8.72  -0.237  
+##  8       1     1 Sparse    YA        -360 NAMword_675_Mule.…        0.680 -0.262  
+##  9       1     1 Sparse    YA        -340 NAMword_675_Mule.…      -11.4   -0.300  
+## 10       1     1 Sparse    YA        -320 NAMword_675_Mule.…      -23.3   -0.338  
 ## # ℹ 87,998 more rows
 ```
 
@@ -273,6 +273,8 @@ layout: true
 --
 
 * You can set the number of knots `k` with the argument `k` in `s()`.
+
+* `k` cannot be larger than the number of "sampling points" in the variable to smooth over.
 
 &lt;br&gt;
 
@@ -504,19 +506,20 @@ pdq_20
 
 ```
 ## # A tibble: 88,008 × 10
-##    subject trial Condition Age   timebins Soundfile            pupil.binned  pupil_z Condition_o Age_o
-##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;    &lt;dbl&gt; &lt;ord&gt;       &lt;ord&gt;
-##  1 1           1 Sparse    YA        -500 NAMword_675_Mule.wav       84.5    0.00347 Sparse      YA   
-##  2 1           1 Sparse    YA        -480 NAMword_675_Mule.wav       75.8   -0.0239  Sparse      YA   
-##  3 1           1 Sparse    YA        -460 NAMword_675_Mule.wav       65.4   -0.0570  Sparse      YA   
-##  4 1           1 Sparse    YA        -440 NAMword_675_Mule.wav       54.3   -0.0922  Sparse      YA   
-##  5 1           1 Sparse    YA        -420 NAMword_675_Mule.wav       35.7   -0.151   Sparse      YA   
-##  6 1           1 Sparse    YA        -400 NAMword_675_Mule.wav       20.2   -0.200   Sparse      YA   
-##  7 1           1 Sparse    YA        -380 NAMword_675_Mule.wav        8.72  -0.237   Sparse      YA   
-##  8 1           1 Sparse    YA        -360 NAMword_675_Mule.wav        0.680 -0.262   Sparse      YA   
-##  9 1           1 Sparse    YA        -340 NAMword_675_Mule.wav      -11.4   -0.300   Sparse      YA   
-## 10 1           1 Sparse    YA        -320 NAMword_675_Mule.wav      -23.3   -0.338   Sparse      YA   
+##    subject trial Condition Age   timebins Soundfile          pupil.binned  pupil_z
+##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 1           1 Sparse    YA        -500 NAMword_675_Mule.…       84.5    0.00347
+##  2 1           1 Sparse    YA        -480 NAMword_675_Mule.…       75.8   -0.0239 
+##  3 1           1 Sparse    YA        -460 NAMword_675_Mule.…       65.4   -0.0570 
+##  4 1           1 Sparse    YA        -440 NAMword_675_Mule.…       54.3   -0.0922 
+##  5 1           1 Sparse    YA        -420 NAMword_675_Mule.…       35.7   -0.151  
+##  6 1           1 Sparse    YA        -400 NAMword_675_Mule.…       20.2   -0.200  
+##  7 1           1 Sparse    YA        -380 NAMword_675_Mule.…        8.72  -0.237  
+##  8 1           1 Sparse    YA        -360 NAMword_675_Mule.…        0.680 -0.262  
+##  9 1           1 Sparse    YA        -340 NAMword_675_Mule.…      -11.4   -0.300  
+## 10 1           1 Sparse    YA        -320 NAMword_675_Mule.…      -23.3   -0.338  
 ## # ℹ 87,998 more rows
+## # ℹ 2 more variables: Condition_o &lt;ord&gt;, Age_o &lt;ord&gt;
 ```
 
 

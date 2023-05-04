@@ -217,6 +217,8 @@ layout: true
 
 * You can set the number of knots `k` with the argument `k` in `s()`.
 
+* `k` cannot be larger than the number of "sampling points" in the variable to smooth over.
+
 <br>
 
 ```{r pdq-gam-2, cache=TRUE}
