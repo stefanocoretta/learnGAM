@@ -28,7 +28,7 @@ class: center, middle, inverse, title-slide
 ### University of Edinburgh
 ]
 .date[
-### 2023/01/17
+### 2023/05/18
 ]
 
 ---
@@ -40,6 +40,23 @@ class: center, middle, inverse, title-slide
 
 
 ## Outline
+
+* Part I: Introduction to GAMMs
+
+  * What are GAMMs?
+  * GAMMs basics
+  * Comparing groups and between groups (interactions)
+  * Random effects
+
+* Break
+
+* Part II: Hands-on
+
+---
+
+class: center middle inverse
+
+## PART I
 
 ---
 
@@ -89,7 +106,27 @@ layout: true
 
 ---
 
-Overview of study
+* **Pupillometry data** from English young and older adults (McLaughlin et al 2022, &lt;https://doi.org/10.3758/s13423-021-01991-0&gt;).
+
+* **Word recognition task** (verbal stimulus + verbal response).
+
+* Words with **sparse and dense neighbourhood** density.
+
+* **Hypotheses**:
+
+  * Recognizing words with more competitors (dense neighbourhood) should come at a greater cognitive cost (greater pupil size) relative to recognizing words with fewer competitors (sparse neighbourhood).
+  
+  * The cognitive demands associated with increased neighbourhood density (greater pupil size) should be greater for older adults compared with young adults.
+
+---
+
+* The original study used Growth Curve Analysis (GCA).
+
+* We will apply GAMs instead.
+
+--
+
+* CAVEAT: We are analysing the whole time course, rather than just a subset as done in the original study.
 
 ---
 
@@ -99,7 +136,7 @@ pdq_20 &lt;- readRDS("data/pdq_20.rds") %&gt;%
   mutate(
     Condition = factor(Condition, levels = c("Sparse", "Dense")),
     Age = factor(Age, levels = c("YA", "OA")),
-    pupil_z = scale(pupil.binned)
+    pupil_z = (pupil.binned - mean(pupil.binned)) / sd(pupil.binned)
   )
 
 pdq_20
@@ -107,18 +144,18 @@ pdq_20
 
 ```
 ## # A tibble: 88,008 × 8
-##    subject trial Condition Age   timebins Soundfile            pupil.binned pupil_z[,1]
-##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;       &lt;dbl&gt;
-##  1       1     1 Sparse    YA        -500 NAMword_675_Mule.wav       84.5       0.00347
-##  2       1     1 Sparse    YA        -480 NAMword_675_Mule.wav       75.8      -0.0239 
-##  3       1     1 Sparse    YA        -460 NAMword_675_Mule.wav       65.4      -0.0570 
-##  4       1     1 Sparse    YA        -440 NAMword_675_Mule.wav       54.3      -0.0922 
-##  5       1     1 Sparse    YA        -420 NAMword_675_Mule.wav       35.7      -0.151  
-##  6       1     1 Sparse    YA        -400 NAMword_675_Mule.wav       20.2      -0.200  
-##  7       1     1 Sparse    YA        -380 NAMword_675_Mule.wav        8.72     -0.237  
-##  8       1     1 Sparse    YA        -360 NAMword_675_Mule.wav        0.680    -0.262  
-##  9       1     1 Sparse    YA        -340 NAMword_675_Mule.wav      -11.4      -0.300  
-## 10       1     1 Sparse    YA        -320 NAMword_675_Mule.wav      -23.3      -0.338  
+##    subject trial Condition Age   timebins Soundfile            pupil.binned  pupil_z
+##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;    &lt;dbl&gt;
+##  1       1     1 Sparse    YA        -500 NAMword_675_Mule.wav       84.5    0.00347
+##  2       1     1 Sparse    YA        -480 NAMword_675_Mule.wav       75.8   -0.0239 
+##  3       1     1 Sparse    YA        -460 NAMword_675_Mule.wav       65.4   -0.0570 
+##  4       1     1 Sparse    YA        -440 NAMword_675_Mule.wav       54.3   -0.0922 
+##  5       1     1 Sparse    YA        -420 NAMword_675_Mule.wav       35.7   -0.151  
+##  6       1     1 Sparse    YA        -400 NAMword_675_Mule.wav       20.2   -0.200  
+##  7       1     1 Sparse    YA        -380 NAMword_675_Mule.wav        8.72  -0.237  
+##  8       1     1 Sparse    YA        -360 NAMword_675_Mule.wav        0.680 -0.262  
+##  9       1     1 Sparse    YA        -340 NAMword_675_Mule.wav      -11.4   -0.300  
+## 10       1     1 Sparse    YA        -320 NAMword_675_Mule.wav      -23.3   -0.338  
 ## # ℹ 87,998 more rows
 ```
 
@@ -126,10 +163,7 @@ pdq_20
 
 
 ```r
-pdq_20 %&gt;%
-  ggplot(aes(timebins, pupil_z)) +
-  geom_point(alpha = 0.01) +
-  facet_grid(Condition ~ Age)
+ggplot(pdq_20, aes(timebins, pupil_z)) + geom_point(alpha = 0.01) + facet_grid(Condition ~ Age)
 ```
 
 &lt;img src="index_files/figure-html/pdq-traj-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -146,7 +180,9 @@ layout: true
 
 ```r
 pdq_gam &lt;- bam(
+  # Outcome
   pupil_z ~
+    # Smooth over timebins
     s(timebins),
   data = pdq_20
 )
@@ -207,8 +243,7 @@ predict_gam(pdq_gam)
 
 
 ```r
-predict_gam(pdq_gam) %&gt;%
-  plot(series = "timebins")
+predict_gam(pdq_gam) %&gt;% plot(series = "timebins")
 ```
 
 &lt;img src="index_files/figure-html/pdq-gam-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -217,8 +252,7 @@ predict_gam(pdq_gam) %&gt;%
 
 
 ```r
-predict_gam(pdq_gam, length_out = 100) %&gt;%
-  plot(series = "timebins")
+predict_gam(pdq_gam, length_out = 100) %&gt;% plot(series = "timebins")
 ```
 
 &lt;img src="index_files/figure-html/pdq-gam-plot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -232,7 +266,7 @@ layout: true
 
 ---
 
-* The "wiggliness" of the resulting spline is partially constrained by the number of *knots* `k`.
+* The "wiggliness" of the resulting spline is partially constrained by the number of *knots* (`k`).
 
 * The more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.
 
@@ -255,8 +289,7 @@ pdq_gam_2 &lt;- bam(
 
 
 ```r
-predict_gam(pdq_gam_2, length_out = 25) %&gt;%
-  plot(series = "timebins")
+predict_gam(pdq_gam_2, length_out = 25) %&gt;% plot(series = "timebins")
 ```
 
 &lt;img src="index_files/figure-html/pdq-gam-2-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -276,8 +309,7 @@ pdq_gam_2 &lt;- bam(
 
 
 ```r
-predict_gam(pdq_gam_2, length_out = 100) %&gt;%
-  plot(series = "timebins")
+predict_gam(pdq_gam_2, length_out = 100) %&gt;% plot(series = "timebins")
 ```
 
 &lt;img src="index_files/figure-html/pdq-gam-2-2-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -291,7 +323,13 @@ layout: true
 
 ---
 
-To use `by`-variables with ordered factors:
+* Comparing levels from a variable can be achieved with the **`by`-variable method**,
+
+    * i.e. by specifying the variable as the value of the `by` argument in `s()`.
+
+--
+
+To use `by`-variables you need to:
 
 * Change factor to an **ordered factor**.
 
@@ -308,16 +346,20 @@ To use `by`-variables with ordered factors:
 ```r
 pdq_20 &lt;- pdq_20 %&gt;%
   mutate(
+    # Make the variables into an ordered factor
     Condition_o = as.ordered(Condition),
     Age_o = as.ordered(Age)
   )
 
+# Change the contrasts to treatment
 contrasts(pdq_20$Condition_o) &lt;- "contr.treatment"
 contrasts(pdq_20$Age_o) &lt;- "contr.treatment"
 ```
 
 
 ---
+
+Let's start with `Age_o`.
 
 
 ```r
@@ -367,8 +409,7 @@ summary(pdq_gam_3)
 
 
 ```r
-predict_gam(pdq_gam_3, length_out = 100) %&gt;%
-  plot(series = "timebins", comparison = "Age_o")
+predict_gam(pdq_gam_3, length_out = 100) %&gt;% plot(series = "timebins", comparison = "Age_o")
 ```
 
 &lt;img src="index_files/figure-html/pdq-gam-3-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -377,13 +418,39 @@ predict_gam(pdq_gam_3, length_out = 100) %&gt;%
 
 
 ```r
-get_difference(
+pdq_gam_3_diff &lt;- get_difference(
   pdq_gam_3, series = "timebins", length_out = 100,
-  compare = list(Age_o = c("OA", "YA"))) %&gt;%
-  plot()
+  compare = list(Age_o = c("OA", "YA"))
+)
+pdq_gam_3_diff
 ```
 
-&lt;img src="index_files/figure-html/pdq-gam-3-diff-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+```
+## # A tibble: 101 × 6
+##    Age_o timebins      diff     se lower_ci upper_ci
+##    &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1 OA-YA    -500   0.0102   0.0340  -0.0564   0.0767
+##  2 OA-YA    -462.  0.00845  0.0296  -0.0496   0.0666
+##  3 OA-YA    -423.  0.00673  0.0260  -0.0442   0.0576
+##  4 OA-YA    -385.  0.00496  0.0231  -0.0403   0.0503
+##  5 OA-YA    -346.  0.00313  0.0211  -0.0382   0.0444
+##  6 OA-YA    -308   0.00119  0.0197  -0.0374   0.0398
+##  7 OA-YA    -270. -0.000898 0.0188  -0.0378   0.0360
+##  8 OA-YA    -231. -0.00316  0.0183  -0.0390   0.0327
+##  9 OA-YA    -193. -0.00562  0.0180  -0.0410   0.0297
+## 10 OA-YA    -154. -0.00833  0.0180  -0.0435   0.0269
+## # ℹ 91 more rows
+```
+
+---
+
+
+```r
+pdq_gam_3_diff %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-3-diff-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
@@ -396,25 +463,35 @@ layout: true
 
 * Only **fixed effects** so far...
 
-* **G**eneralised **A**dditive **M**ixed **M**odel (GAMM)
+  * Parametric terms.
+  * Smooth terms.
+
+--
+
+* **G**eneralised **A**dditive **M**ixed **M**odels (GAMMs).
 
 * Two ways of including random effects:
 
-  * Use the `"re"` basis function for random intercept and slopes.
+  * Use the `"re"` basis function (`bs` argument in `s()`) for random intercept and slopes.
 
   * Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
+  
+--
+
+* The **factor smooth interaction** method is more robust.
 
 ---
 
 * **Factor smooth interaction**:
     * `bs = "fs"`.
     * A smooth is fitted at each level of a factor.
+    * NOTE: it has *interaction* in the name but has nothing to do with interactions
 
 * The random effect variable *needs to be a factor*.
 
-* `s(Trial, Subject, bs = "fs", m = 1)`
-
 ---
+
+Let's change `subject` to a factor (no need to make it an ordered factor).
 
 
 ```r
@@ -427,18 +504,18 @@ pdq_20
 
 ```
 ## # A tibble: 88,008 × 10
-##    subject trial Condition Age   timebins Soundfile          pupil.binned pupil_z[,1] Condition_o Age_o
-##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;       &lt;dbl&gt; &lt;ord&gt;       &lt;ord&gt;
-##  1 1           1 Sparse    YA        -500 NAMword_675_Mule.…       84.5       0.00347 Sparse      YA   
-##  2 1           1 Sparse    YA        -480 NAMword_675_Mule.…       75.8      -0.0239  Sparse      YA   
-##  3 1           1 Sparse    YA        -460 NAMword_675_Mule.…       65.4      -0.0570  Sparse      YA   
-##  4 1           1 Sparse    YA        -440 NAMword_675_Mule.…       54.3      -0.0922  Sparse      YA   
-##  5 1           1 Sparse    YA        -420 NAMword_675_Mule.…       35.7      -0.151   Sparse      YA   
-##  6 1           1 Sparse    YA        -400 NAMword_675_Mule.…       20.2      -0.200   Sparse      YA   
-##  7 1           1 Sparse    YA        -380 NAMword_675_Mule.…        8.72     -0.237   Sparse      YA   
-##  8 1           1 Sparse    YA        -360 NAMword_675_Mule.…        0.680    -0.262   Sparse      YA   
-##  9 1           1 Sparse    YA        -340 NAMword_675_Mule.…      -11.4      -0.300   Sparse      YA   
-## 10 1           1 Sparse    YA        -320 NAMword_675_Mule.…      -23.3      -0.338   Sparse      YA   
+##    subject trial Condition Age   timebins Soundfile            pupil.binned  pupil_z Condition_o Age_o
+##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;    &lt;dbl&gt; &lt;ord&gt;       &lt;ord&gt;
+##  1 1           1 Sparse    YA        -500 NAMword_675_Mule.wav       84.5    0.00347 Sparse      YA   
+##  2 1           1 Sparse    YA        -480 NAMword_675_Mule.wav       75.8   -0.0239  Sparse      YA   
+##  3 1           1 Sparse    YA        -460 NAMword_675_Mule.wav       65.4   -0.0570  Sparse      YA   
+##  4 1           1 Sparse    YA        -440 NAMword_675_Mule.wav       54.3   -0.0922  Sparse      YA   
+##  5 1           1 Sparse    YA        -420 NAMword_675_Mule.wav       35.7   -0.151   Sparse      YA   
+##  6 1           1 Sparse    YA        -400 NAMword_675_Mule.wav       20.2   -0.200   Sparse      YA   
+##  7 1           1 Sparse    YA        -380 NAMword_675_Mule.wav        8.72  -0.237   Sparse      YA   
+##  8 1           1 Sparse    YA        -360 NAMword_675_Mule.wav        0.680 -0.262   Sparse      YA   
+##  9 1           1 Sparse    YA        -340 NAMword_675_Mule.wav      -11.4   -0.300   Sparse      YA   
+## 10 1           1 Sparse    YA        -320 NAMword_675_Mule.wav      -23.3   -0.338   Sparse      YA   
 ## # ℹ 87,998 more rows
 ```
 
@@ -449,9 +526,13 @@ pdq_20
 ```r
 pdq_gam_4 &lt;- bam(
   pupil_z ~
+    # Paramteric term
     Age_o +
+    # Reference smooth
     s(timebins, k = 20) +
+    # Difference smooth
     s(timebins, by = Age_o, k = 20) +
+    # Factor smooth interaction by subject
     s(timebins, subject, bs = "fs", m = 1),
   data = pdq_20
 )
@@ -502,10 +583,8 @@ predict_gam(pdq_gam_4, length_out = 100, exclude_terms = "s(timebins,subject)") 
 
 
 ```r
-predict_gam(pdq_gam_4, length_out = 100, values = c(Age_o = "YA")) %&gt;%
-  # filter only YA subjects
-  filter(subject %in% c(1:10)) %&gt;%
-  plot(series = "timebins")
+predict_gam(pdq_gam_4, length_out = 100, values = c(Age_o = "YA")) %&gt;% # filter only YA subjects
+  filter(subject %in% c(1:10)) %&gt;% plot(series = "timebins")
 ```
 
 &lt;img src="index_files/figure-html/pdq-gam-4-plot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -549,9 +628,13 @@ contrasts(pdq_20$Age_Cond) &lt;- "contr.treatment"
 ```r
 pdq_gam_5 &lt;- bam(
   pupil_z ~
+    # Paramteric term
     Age_Cond +
+    # Reference smooth
     s(timebins, k = 20) +
+    # Difference smooth
     s(timebins, by = Age_Cond, k = 20) +
+    # Factor smooth interaction by subject
     s(timebins, subject, bs = "fs", m = 1),
   data = pdq_20
 )
@@ -607,26 +690,54 @@ predict_gam(pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)") 
 
 
 ```r
-predict_gam(
+pdq_gam_5_pred_2 &lt;- predict_gam(
   pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)",
-  separate = list(Age_Cond = c("Age", "Condition"))) %&gt;%
-  plot(series = "timebins", comparison = "Condition") +
-  facet_grid(~ Age)
+  separate = list(Age_Cond = c("Age", "Condition"))
+) %&gt;%
+  # The separate arguments returns variables with default alphabetical order.
+  # Let's reorder the levels in Condition and Age.
+  mutate(
+    Condition = factor(Condition, levels = c("Sparse", "Dense")),
+    Age = factor(Age, levels = c("YA", "OA")),
+  )
 ```
-
-&lt;img src="index_files/figure-html/pdq-gam-5-plot-2-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
 ```r
-get_difference(
-  pdq_gam_5, series = "timebins", length_out = 100, exclude_terms = "s(timebins,subject)",
-  compare = list(Age_Cond = c("YA.Dense", "YA.Sparse"))) %&gt;%
-  plot()
+pdq_gam_5_pred_2 %&gt;% plot(series = "timebins", comparison = "Condition") + facet_grid(~ Age)
 ```
 
-&lt;img src="index_files/figure-html/pdq-gam-5-diff-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pdq-gam-5-pred-2-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+```r
+pdq_gam_5_diff &lt;- get_difference(
+  pdq_gam_5, series = "timebins", length_out = 100, exclude_terms = "s(timebins,subject)",
+  compare = list(Age_Cond = c("YA.Dense", "YA.Sparse"))
+)
+```
+
+---
+
+
+```r
+pdq_gam_5_diff %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/pdq-gam-5-diff-plot-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center middle inverse
+
+## PART II
+
+### Hands-on
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
