@@ -41,6 +41,8 @@ class: center, middle, inverse, title-slide
 
 ## Outline
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
 * Part I: Introduction to GAMMs
 
   * What are GAMMs?
@@ -52,6 +54,8 @@ class: center, middle, inverse, title-slide
 
 * Part II: Hands-on
 
+]
+
 ---
 
 class: center middle inverse
@@ -62,34 +66,38 @@ class: center middle inverse
 
 ## Generalised additive models
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 * **G**enrealised **A**dditive **M**odel**s** (GAMs)
 
 * `\(y = f(x)\)`
     * `\(f(x)\)` = some function of `\(x\)` (or *smooth function*)
+]
 
 ---
 
 ## Smooth terms
 
-* LMs have only **parametric terms**
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+LMs have only **parametric terms**
 
-    * `f0 ~ vowel + voicing + duration`
-    
-    * Parametric terms fit linear effects.
+* `f0 ~ vowel + voicing + duration`
 
---
-
-* GAMs add (non-parametric) **smooth terms** (or simply smooths, also smoothers):
-
-    * `f0 ~ vowel + voicing + s(duration)`
-    
-    * `f(x)`: *some function of `\(x\)`*.
-    
-    * Smooth terms fit non-linear effects.
+* Parametric terms fit linear effects.
+]
 
 --
 
-&lt;br&gt;
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+GAMs add (non-parametric) **smooth terms** (or simply smooths, also smoothers):
+
+* `f0 ~ vowel + voicing + s(duration)`
+
+* `f(x)`: *some function of `\(x\)`*.
+
+* Smooth terms fit non-linear effects.
+]
+
+--
 
 ```r
 library(mgcv)
@@ -106,7 +114,9 @@ layout: true
 
 ---
 
-* **Pupillometry data** from English young and older adults (McLaughlin et al 2022, &lt;https://doi.org/10.3758/s13423-021-01991-0&gt;).
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+* **Pupillometry data** from English young and older adults (McLaughlin et al 2022, &lt;https://doi.org/10.3758/s13423-021-01991-0&gt;). In Arbitrary Units (AU).
 
 * **Word recognition task** (verbal stimulus + verbal response).
 
@@ -118,15 +128,22 @@ layout: true
   
   * The cognitive demands associated with increased neighbourhood density (greater pupil size) should be greater for older adults compared with young adults.
 
+]
+
 ---
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
 * The original study used Growth Curve Analysis (GCA).
 
 * We will apply GAMs instead.
+]
 
 --
 
+.bg-washed-yellow.b--gold.ba.bw2.br3.shadow-5.ph4.mt2[
 * CAVEAT: We are analysing the whole time course, rather than just a subset as done in the original study.
+]
 
 ---
 
@@ -144,27 +161,22 @@ pdq_20
 
 ```
 ## # A tibble: 88,008 × 8
-##    subject trial Condition Age   timebins Soundfile          pupil.binned  pupil_z
-##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;    &lt;dbl&gt;
-##  1       1     1 Sparse    YA        -500 NAMword_675_Mule.…       84.5    0.00347
-##  2       1     1 Sparse    YA        -480 NAMword_675_Mule.…       75.8   -0.0239 
-##  3       1     1 Sparse    YA        -460 NAMword_675_Mule.…       65.4   -0.0570 
-##  4       1     1 Sparse    YA        -440 NAMword_675_Mule.…       54.3   -0.0922 
-##  5       1     1 Sparse    YA        -420 NAMword_675_Mule.…       35.7   -0.151  
-##  6       1     1 Sparse    YA        -400 NAMword_675_Mule.…       20.2   -0.200  
-##  7       1     1 Sparse    YA        -380 NAMword_675_Mule.…        8.72  -0.237  
-##  8       1     1 Sparse    YA        -360 NAMword_675_Mule.…        0.680 -0.262  
-##  9       1     1 Sparse    YA        -340 NAMword_675_Mule.…      -11.4   -0.300  
-## 10       1     1 Sparse    YA        -320 NAMword_675_Mule.…      -23.3   -0.338  
+##    subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z
+##      &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;
+##  1       1     1 Sparse    YA        -500 NAMword_675_Mul…       84.5    0.00347
+##  2       1     1 Sparse    YA        -480 NAMword_675_Mul…       75.8   -0.0239 
+##  3       1     1 Sparse    YA        -460 NAMword_675_Mul…       65.4   -0.0570 
+##  4       1     1 Sparse    YA        -440 NAMword_675_Mul…       54.3   -0.0922 
+##  5       1     1 Sparse    YA        -420 NAMword_675_Mul…       35.7   -0.151  
+##  6       1     1 Sparse    YA        -400 NAMword_675_Mul…       20.2   -0.200  
+##  7       1     1 Sparse    YA        -380 NAMword_675_Mul…        8.72  -0.237  
+##  8       1     1 Sparse    YA        -360 NAMword_675_Mul…        0.680 -0.262  
+##  9       1     1 Sparse    YA        -340 NAMword_675_Mul…      -11.4   -0.300  
+## 10       1     1 Sparse    YA        -320 NAMword_675_Mul…      -23.3   -0.338  
 ## # ℹ 87,998 more rows
 ```
 
 ---
-
-
-```r
-ggplot(pdq_20, aes(timebins, pupil_z)) + geom_point(alpha = 0.01) + facet_grid(Condition ~ Age)
-```
 
 &lt;img src="index_files/figure-html/pdq-traj-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
@@ -179,7 +191,9 @@ layout: true
 
 
 ```r
-pdq_gam &lt;- bam(
+library(mgcv)
+
+pdq_gam &lt;- gam(
   # Outcome
   pupil_z ~
     # Smooth over timebins
@@ -204,21 +218,29 @@ summary(pdq_gam)
 ## pupil_z ~ s(timebins)
 ## 
 ## Parametric coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept) 0.001098   0.003317   0.331    0.741
+##               Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -2.271e-14  3.316e-03       0        1
 ## 
 ## Approximate significance of smooth terms:
 ##               edf Ref.df     F p-value
-## s(timebins) 8.466  8.919 326.9  &lt;2e-16
+## s(timebins) 7.891  8.679 334.7  &lt;2e-16
 ## 
-## R-sq.(adj) =  0.0321   Deviance explained = 3.22%
-## fREML = 1.2347e+05  Scale est. = 0.96794   n = 88008
+## R-sq.(adj) =  0.0321   Deviance explained = 3.21%
+## GCV = 0.96804  Scale est. = 0.96794   n = 88008
 ```
+
+--
+
+* The parametric term's coefficient is an estimate of the mean height.
+
+* The smooth's EDFs (estimated degrees of freedom) indicate whether it is a straight line (EDF = 1) or not.
 
 ---
 
 
 ```r
+library(tidygam)
+
 predict_gam(pdq_gam)
 ```
 
@@ -226,17 +248,17 @@ predict_gam(pdq_gam)
 ## # A tibble: 11 × 5
 ##    timebins   pupil_z        se  lower_ci  upper_ci
 ##       &lt;dbl&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt;
-##  1     -500  -0.258     0.0187    -0.295  -0.221   
-##  2     -116  -0.272     0.0104    -0.292  -0.252   
-##  3      268  -0.229     0.00979   -0.248  -0.210   
-##  4      652  -0.0209    0.00957   -0.0396 -0.00212 
-##  5     1036   0.227     0.00944    0.209   0.246   
-##  6     1420   0.285     0.00939    0.267   0.304   
-##  7     1804   0.152     0.00944    0.134   0.171   
-##  8     2188   0.0369    0.00957    0.0182  0.0557  
-##  9     2572   0.00349   0.00979   -0.0157  0.0227  
-## 10     2956  -0.0269    0.0104    -0.0472 -0.00661 
-## 11     3340  -0.0377    0.0187    -0.0744 -0.000939
+##  1     -500  -0.258     0.0181    -0.294   -0.223  
+##  2     -116  -0.273     0.00990   -0.293   -0.254  
+##  3      268  -0.226     0.00941   -0.244   -0.208  
+##  4      652  -0.0196    0.00925   -0.0378  -0.00152
+##  5     1036   0.224     0.00916    0.207    0.242  
+##  6     1420   0.283     0.00912    0.265    0.301  
+##  7     1804   0.154     0.00916    0.136    0.172  
+##  8     2188   0.0386    0.00925    0.0205   0.0568 
+##  9     2572   0.00188   0.00941   -0.0166   0.0203 
+## 10     2956  -0.0261    0.00990   -0.0455  -0.00666
+## 11     3340  -0.0391    0.0181    -0.0746  -0.00359
 ```
 
 ---
@@ -266,20 +288,25 @@ layout: true
 
 ---
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 * The "wiggliness" of the resulting spline is partially constrained by the number of *knots* (`k`).
 
 * The more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.
+]
 
 --
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 * You can set the number of knots `k` with the argument `k` in `s()`.
 
 * `k` cannot be larger than the number of "sampling points" in the variable to smooth over.
+]
 
 &lt;br&gt;
 
 
 ```r
+# Use bam(): Big gAM
 pdq_gam_2 &lt;- bam(
   pupil_z ~
     s(timebins, k = 3),
@@ -325,22 +352,69 @@ layout: true
 
 ---
 
-* Comparing levels from a variable can be achieved with the **`by`-variable method**,
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+* Comparing levels from a variable (like age: young vs old) can be achieved with the **`by`-variable method**,
 
     * i.e. by specifying the variable as the value of the `by` argument in `s()`.
+]
 
 --
 
-To use `by`-variables you need to:
+
+```r
+pdq_gam_3a &lt;- bam(
+  pupil_z ~
+    s(timebins, by = Age, k = 20),
+  data = pdq_20
+)
+```
+
+---
+
+
+```r
+summary(pdq_gam_3a)
+```
+
+```
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## Formula:
+## pupil_z ~ s(timebins, by = Age, k = 20)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 0.001158   0.003315   0.349    0.727
+## 
+## Approximate significance of smooth terms:
+##                     edf Ref.df      F p-value
+## s(timebins):AgeYA 11.32  13.71 144.31  &lt;2e-16
+## s(timebins):AgeOA 10.14  12.40  82.94  &lt;2e-16
+## 
+## R-sq.(adj) =  0.033   Deviance explained = 3.33%
+## fREML = 1.2344e+05  Scale est. = 0.96698   n = 88008
+```
+
+--
+
+**But what about comparing YA and OA?**
+
+---
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+To compare levels to a reference level:
 
 * Change factor to an **ordered factor**.
 
-* Change factor contrast to **treatment contrast** (`contr.treatment`).
+* Change factor contrasts to **treatment contrasts** (`contr.treatment`).
     * The default in ordered factors is `contr.poly`, this won't work.
     
 * Include the factor as a **parametric term**.
 
 * Include a **reference smooth** and a **difference smooth** with the `by`-variable.
+]
 
 ---
 
@@ -371,7 +445,7 @@ pdq_gam_3 &lt;- bam(
     Age_o +
     # Reference smooth (Age_0 == "YA")
     s(timebins, k = 20) +
-    # Difference smooth
+    # Difference smooth ("OA" - "YA")
     s(timebins, by = Age_o, k = 20),
   data = pdq_20
 )
@@ -380,19 +454,7 @@ pdq_gam_3 &lt;- bam(
 ---
 
 
-```r
-summary(pdq_gam_3)
 ```
-
-```
-## 
-## Family: gaussian 
-## Link function: identity 
-## 
-## Formula:
-## pupil_z ~ Age_o + s(timebins, k = 20) + s(timebins, by = Age_o, 
-##     k = 20)
-## 
 ## Parametric coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)
 ## (Intercept)  0.029495   0.004512   6.537  6.3e-11
@@ -402,10 +464,19 @@ summary(pdq_gam_3)
 ##                        edf Ref.df       F p-value
 ## s(timebins)         11.985 14.367 138.640  &lt;2e-16
 ## s(timebins):Age_oOA  7.397  9.139   8.446  &lt;2e-16
-## 
-## R-sq.(adj) =  0.0339   Deviance explained = 3.41%
-## fREML = 1.234e+05  Scale est. = 0.96609   n = 88008
 ```
+
+--
+
+&lt;br&gt;
+
+* `Intercept`: mean height when Age == "YA".
+
+* `Age_oOA`: height difference between "OA" and "YA".
+
+* `s(timebins)`: EDF &gt; 1 = trajectory is not a straight line.
+
+* `s(timebins):Age_oOA`: EDF &gt; 1 = trajectory of "OA" is different from "YA".
 
 ---
 
@@ -463,33 +534,35 @@ layout: true
 
 ---
 
-* Only **fixed effects** so far...
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Only **fixed effects** so far...
 
-  * Parametric terms.
-  * Smooth terms.
+* Parametric terms.
+* Smooth terms.
+]
 
 --
 
-* **G**eneralised **A**dditive **M**ixed **M**odels (GAMMs).
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**G**eneralised **A**dditive **M**ixed **M**odels (GAMMs).
 
-* Two ways of including random effects:
+Two ways of including random effects:
 
-  * Use the `"re"` basis function (`bs` argument in `s()`) for random intercept and slopes.
+* Use the `"re"` basis function (`bs` argument in `s()`) for random intercept and slopes.
 
-  * Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
-  
---
-
-* The **factor smooth interaction** method is more robust.
+* Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
+]
 
 ---
 
-* **Factor smooth interaction**:
-    * `bs = "fs"`.
-    * A smooth is fitted at each level of a factor.
-    * NOTE: it has *interaction* in the name but has nothing to do with interactions
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Factor smooth interaction**:
+* Specified with `bs = "fs"` in `s()`.
+* A smooth is fitted at each level of a factor.
+* NOTE: it has *interaction* in the name but has nothing to do with interactions.
 
-* The random effect variable *needs to be a factor*.
+The random effect variable *needs to be a factor*.
+]
 
 ---
 
@@ -506,18 +579,18 @@ pdq_20
 
 ```
 ## # A tibble: 88,008 × 10
-##    subject trial Condition Age   timebins Soundfile          pupil.binned  pupil_z
-##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;dbl&gt;    &lt;dbl&gt;
-##  1 1           1 Sparse    YA        -500 NAMword_675_Mule.…       84.5    0.00347
-##  2 1           1 Sparse    YA        -480 NAMword_675_Mule.…       75.8   -0.0239 
-##  3 1           1 Sparse    YA        -460 NAMword_675_Mule.…       65.4   -0.0570 
-##  4 1           1 Sparse    YA        -440 NAMword_675_Mule.…       54.3   -0.0922 
-##  5 1           1 Sparse    YA        -420 NAMword_675_Mule.…       35.7   -0.151  
-##  6 1           1 Sparse    YA        -400 NAMword_675_Mule.…       20.2   -0.200  
-##  7 1           1 Sparse    YA        -380 NAMword_675_Mule.…        8.72  -0.237  
-##  8 1           1 Sparse    YA        -360 NAMword_675_Mule.…        0.680 -0.262  
-##  9 1           1 Sparse    YA        -340 NAMword_675_Mule.…      -11.4   -0.300  
-## 10 1           1 Sparse    YA        -320 NAMword_675_Mule.…      -23.3   -0.338  
+##    subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z
+##    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;
+##  1 1           1 Sparse    YA        -500 NAMword_675_Mul…       84.5    0.00347
+##  2 1           1 Sparse    YA        -480 NAMword_675_Mul…       75.8   -0.0239 
+##  3 1           1 Sparse    YA        -460 NAMword_675_Mul…       65.4   -0.0570 
+##  4 1           1 Sparse    YA        -440 NAMword_675_Mul…       54.3   -0.0922 
+##  5 1           1 Sparse    YA        -420 NAMword_675_Mul…       35.7   -0.151  
+##  6 1           1 Sparse    YA        -400 NAMword_675_Mul…       20.2   -0.200  
+##  7 1           1 Sparse    YA        -380 NAMword_675_Mul…        8.72  -0.237  
+##  8 1           1 Sparse    YA        -360 NAMword_675_Mul…        0.680 -0.262  
+##  9 1           1 Sparse    YA        -340 NAMword_675_Mul…      -11.4   -0.300  
+## 10 1           1 Sparse    YA        -320 NAMword_675_Mul…      -23.3   -0.338  
 ## # ℹ 87,998 more rows
 ## # ℹ 2 more variables: Condition_o &lt;ord&gt;, Age_o &lt;ord&gt;
 ```
@@ -601,25 +674,34 @@ layout: true
 
 ---
 
-* Technically, GAMs **don't allow interactions**.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Technically, GAMs **don't allow interactions**.
 
-  * They are ADDITIVE (interactions require multiplication).
+* They are ADDITIVE (interactions require multiplication).
+]
 
 --
 
-* We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+]
 
 ---
 
-Let's create a factor interaction between `Age_o` and `Condition_o`.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+* Let's create a factor interaction between `Age` and `Condition`.
 
-We also need to make it into an ordered factor with treatment contrasts.
+* We also need to make it into an ordered factor with treatment contrasts.
+
+* Note that the model will include this factor interaction (no need for `Age` and `Condition`).
+
+]
 
 
 ```r
 pdq_20 &lt;- pdq_20 %&gt;%
   mutate(
-    Age_Cond = as.ordered(interaction(Age_o, Condition_o))
+    Age_Cond = as.ordered(interaction(Age, Condition))
   )
 
 contrasts(pdq_20$Age_Cond) &lt;- "contr.treatment"
@@ -736,6 +818,7 @@ pdq_gam_5_diff %&gt;% plot()
 
 ---
 
+layout: false
 class: center middle inverse
 
 ## PART II

@@ -45,11 +45,16 @@ library(tidygam)
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
 library(xaringanthemer)
-style_mono_light(outfile = "slides/short/xaringan-themer.css")
+style_mono_light(
+  outfile = "slides/short/xaringan-themer.css",
+  link_color = "#944339"
+)
 ```
 
 
 ## Outline
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
 * Part I: Introduction to GAMMs
 
@@ -62,6 +67,8 @@ style_mono_light(outfile = "slides/short/xaringan-themer.css")
 
 * Part II: Hands-on
 
+]
+
 ---
 
 class: center middle inverse
@@ -72,34 +79,38 @@ class: center middle inverse
 
 ## Generalised additive models
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 * **G**enrealised **A**dditive **M**odel**s** (GAMs)
 
 * $y = f(x)$
     * $f(x)$ = some function of $x$ (or *smooth function*)
+]
 
 ---
 
 ## Smooth terms
 
-* LMs have only **parametric terms**
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+LMs have only **parametric terms**
 
-    * `f0 ~ vowel + voicing + duration`
-    
-    * Parametric terms fit linear effects.
+* `f0 ~ vowel + voicing + duration`
 
---
-
-* GAMs add (non-parametric) **smooth terms** (or simply smooths, also smoothers):
-
-    * `f0 ~ vowel + voicing + s(duration)`
-    
-    * `f(x)`: *some function of $x$*.
-    
-    * Smooth terms fit non-linear effects.
+* Parametric terms fit linear effects.
+]
 
 --
 
-<br>
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+GAMs add (non-parametric) **smooth terms** (or simply smooths, also smoothers):
+
+* `f0 ~ vowel + voicing + s(duration)`
+
+* `f(x)`: *some function of $x$*.
+
+* Smooth terms fit non-linear effects.
+]
+
+--
 
 ```r
 library(mgcv)
@@ -116,7 +127,9 @@ layout: true
 
 ---
 
-* **Pupillometry data** from English young and older adults (McLaughlin et al 2022, <https://doi.org/10.3758/s13423-021-01991-0>).
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+
+* **Pupillometry data** from English young and older adults (McLaughlin et al 2022, <https://doi.org/10.3758/s13423-021-01991-0>). In Arbitrary Units (AU).
 
 * **Word recognition task** (verbal stimulus + verbal response).
 
@@ -128,15 +141,22 @@ layout: true
   
   * The cognitive demands associated with increased neighbourhood density (greater pupil size) should be greater for older adults compared with young adults.
 
+]
+
 ---
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 
 * The original study used Growth Curve Analysis (GCA).
 
 * We will apply GAMs instead.
+]
 
 --
 
+.bg-washed-yellow.b--gold.ba.bw2.br3.shadow-5.ph4.mt2[
 * CAVEAT: We are analysing the whole time course, rather than just a subset as done in the original study.
+]
 
 ---
 
@@ -153,8 +173,8 @@ pdq_20
 
 ---
 
-```{r pdq-traj}
-ggplot(pdq_20, aes(timebins, pupil_z)) + geom_point(alpha = 0.01) + facet_grid(Condition ~ Age)
+```{r pdq-traj, echo=FALSE}
+ggplot(pdq_20, aes(timebins, pupil_z)) + geom_point(alpha = 0.01) + facet_grid(Condition ~ Age) + geom_vline(xintercept = 0, alpha = 0.5)
 ```
 
 ---
@@ -167,7 +187,9 @@ layout: true
 ---
 
 ```{r pdq-gam, cache=TRUE}
-pdq_gam <- bam(
+library(mgcv)
+
+pdq_gam <- gam(
   # Outcome
   pupil_z ~
     # Smooth over timebins
@@ -182,9 +204,17 @@ pdq_gam <- bam(
 summary(pdq_gam)
 ```
 
+--
+
+* The parametric term's coefficient is an estimate of the mean height.
+
+* The smooth's EDFs (estimated degrees of freedom) indicate whether it is a straight line (EDF = 1) or not.
+
 ---
 
 ```{r pdq-gam-pred}
+library(tidygam)
+
 predict_gam(pdq_gam)
 ```
 
@@ -209,19 +239,24 @@ layout: true
 
 ---
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 * The "wiggliness" of the resulting spline is partially constrained by the number of *knots* (`k`).
 
 * The more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.
+]
 
 --
 
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
 * You can set the number of knots `k` with the argument `k` in `s()`.
 
 * `k` cannot be larger than the number of "sampling points" in the variable to smooth over.
+]
 
 <br>
 
 ```{r pdq-gam-2, cache=TRUE}
+# Use bam(): Big gAM
 pdq_gam_2 <- bam(
   pupil_z ~
     s(timebins, k = 3),
@@ -260,22 +295,46 @@ layout: true
 
 ---
 
-* Comparing levels from a variable can be achieved with the **`by`-variable method**,
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+* Comparing levels from a variable (like age: young vs old) can be achieved with the **`by`-variable method**,
 
     * i.e. by specifying the variable as the value of the `by` argument in `s()`.
+]
 
 --
 
-To use `by`-variables you need to:
+```{r pdq-gam-3a, cache=TRUE}
+pdq_gam_3a <- bam(
+  pupil_z ~
+    s(timebins, by = Age, k = 20),
+  data = pdq_20
+)
+```
+
+---
+
+```{r pdq-gam-3a-sum}
+summary(pdq_gam_3a)
+```
+
+--
+
+**But what about comparing YA and OA?**
+
+---
+
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+To compare levels to a reference level:
 
 * Change factor to an **ordered factor**.
 
-* Change factor contrast to **treatment contrast** (`contr.treatment`).
+* Change factor contrasts to **treatment contrasts** (`contr.treatment`).
     * The default in ordered factors is `contr.poly`, this won't work.
     
 * Include the factor as a **parametric term**.
 
 * Include a **reference smooth** and a **difference smooth** with the `by`-variable.
+]
 
 ---
 
@@ -304,7 +363,7 @@ pdq_gam_3 <- bam(
     Age_o +
     # Reference smooth (Age_0 == "YA")
     s(timebins, k = 20) +
-    # Difference smooth
+    # Difference smooth ("OA" - "YA")
     s(timebins, by = Age_o, k = 20),
   data = pdq_20
 )
@@ -312,9 +371,21 @@ pdq_gam_3 <- bam(
 
 ---
 
-```{r pdq-gam-3-sum}
-summary(pdq_gam_3)
+```{r pdq-gam-3-sum, echo=FALSE}
+cat(capture.output(summary(pdq_gam_3))[9:17], sep = "\n")
 ```
+
+--
+
+<br>
+
+* `Intercept`: mean height when Age == "YA".
+
+* `Age_oOA`: height difference between "OA" and "YA".
+
+* `s(timebins)`: EDF > 1 = trajectory is not a straight line.
+
+* `s(timebins):Age_oOA`: EDF > 1 = trajectory of "OA" is different from "YA".
 
 ---
 
@@ -348,33 +419,35 @@ layout: true
 
 ---
 
-* Only **fixed effects** so far...
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Only **fixed effects** so far...
 
-  * Parametric terms.
-  * Smooth terms.
+* Parametric terms.
+* Smooth terms.
+]
 
 --
 
-* **G**eneralised **A**dditive **M**ixed **M**odels (GAMMs).
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**G**eneralised **A**dditive **M**ixed **M**odels (GAMMs).
 
-* Two ways of including random effects:
+Two ways of including random effects:
 
-  * Use the `"re"` basis function (`bs` argument in `s()`) for random intercept and slopes.
+* Use the `"re"` basis function (`bs` argument in `s()`) for random intercept and slopes.
 
-  * Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
-  
---
-
-* The **factor smooth interaction** method is more robust.
+* Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
+]
 
 ---
 
-* **Factor smooth interaction**:
-    * `bs = "fs"`.
-    * A smooth is fitted at each level of a factor.
-    * NOTE: it has *interaction* in the name but has nothing to do with interactions
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+**Factor smooth interaction**:
+* Specified with `bs = "fs"` in `s()`.
+* A smooth is fitted at each level of a factor.
+* NOTE: it has *interaction* in the name but has nothing to do with interactions.
 
-* The random effect variable *needs to be a factor*.
+The random effect variable *needs to be a factor*.
+]
 
 ---
 
@@ -435,24 +508,33 @@ layout: true
 
 ---
 
-* Technically, GAMs **don't allow interactions**.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+Technically, GAMs **don't allow interactions**.
 
-  * They are ADDITIVE (interactions require multiplication).
+* They are ADDITIVE (interactions require multiplication).
+]
 
 --
 
-* We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+]
 
 ---
 
-Let's create a factor interaction between `Age_o` and `Condition_o`.
+.bg-washed-green.b--dark-green.ba.bw2.br3.shadow-5.ph4.mt2[
+* Let's create a factor interaction between `Age` and `Condition`.
 
-We also need to make it into an ordered factor with treatment contrasts.
+* We also need to make it into an ordered factor with treatment contrasts.
+
+* Note that the model will include this factor interaction (no need for `Age` and `Condition`).
+
+]
 
 ```{r pdq-int}
 pdq_20 <- pdq_20 %>%
   mutate(
-    Age_Cond = as.ordered(interaction(Age_o, Condition_o))
+    Age_Cond = as.ordered(interaction(Age, Condition))
   )
 
 contrasts(pdq_20$Age_Cond) <- "contr.treatment"
@@ -528,6 +610,7 @@ pdq_gam_5_diff %>% plot()
 
 ---
 
+layout: false
 class: center middle inverse
 
 ## PART II
