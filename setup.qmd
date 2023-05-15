@@ -10,7 +10,6 @@ Please, have the following software installed on your laptop.
 - The following `R` packages, available on CRAN:
     - `tidyverse`
     - `mgcv`
-- The following package available on GitHub (please, install the development version)
-    - `tidygam`: <https://github.com/stefanocoretta/tidygam>
+    - `tidygam`.
 
 Be sure to update all of your other `R` packages.

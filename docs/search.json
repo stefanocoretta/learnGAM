@@ -7,6 +7,13 @@
     "text": "I recommend the following tutorials to revise the content of the workshop and for further details of fitting GAMs:\n\nSóskuthy, Márton. 2017. Generalised additive mixed models for dynamic analysis in linguistics: a practical introduction. https://doi.org/10.48550/arXiv.1703.05339\nSóskuthy, Márton. 2021. Evaluating generalised additive mixed modelling strategies for dynamic speech analysis. https://doi.org/10.1016/j.wocn.2020.101017\nPedersen, Eric et al. 2019. Hierarchical generalized additive models in ecology: an introduction with mgcv. https://doi.org/10.7717/peerj.6876\n\nSee also:\n\nTamminga, Meredith et al. 2016. Generalized additive mixed models for intraspeaker variation. https://doi.org/10.1515/lingvan-2016-0030\nWinter, Bodo et al. 2016. How to analyze linguistic change using mixed models, growth curve analysis and generalized additive modeling. https://doi.org/10.1093/jole/lzv003\nWieling, Martijn. 2018. Analyzing dynamic phonetic data using generalized additive mixed modeling: a tutorial focusing on articulatory differences between L1 and L2 speakers of English. https://www.sciencedirect.com/science/article/abs/pii/S0095447017301377\n\nOther tutorials.\n\nNoam, Ross. GAMs in R: A free, interactive course using mgcv. https://noamross.github.io/gams-in-r-course/\nClark, Michael. Generalised Additive Models. https://m-clark.github.io/generalized-additive-models/"
   },
   {
+    "objectID": "extra.html#tutorials",
+    "href": "extra.html#tutorials",
+    "title": "Extra",
+    "section": "",
+    "text": "I recommend the following tutorials to revise the content of the workshop and for further details of fitting GAMs:\n\nSóskuthy, Márton. 2017. Generalised additive mixed models for dynamic analysis in linguistics: a practical introduction. https://doi.org/10.48550/arXiv.1703.05339\nSóskuthy, Márton. 2021. Evaluating generalised additive mixed modelling strategies for dynamic speech analysis. https://doi.org/10.1016/j.wocn.2020.101017\nPedersen, Eric et al. 2019. Hierarchical generalized additive models in ecology: an introduction with mgcv. https://doi.org/10.7717/peerj.6876\n\nSee also:\n\nTamminga, Meredith et al. 2016. Generalized additive mixed models for intraspeaker variation. https://doi.org/10.1515/lingvan-2016-0030\nWinter, Bodo et al. 2016. How to analyze linguistic change using mixed models, growth curve analysis and generalized additive modeling. https://doi.org/10.1093/jole/lzv003\nWieling, Martijn. 2018. Analyzing dynamic phonetic data using generalized additive mixed modeling: a tutorial focusing on articulatory differences between L1 and L2 speakers of English. https://www.sciencedirect.com/science/article/abs/pii/S0095447017301377\n\nOther tutorials.\n\nNoam, Ross. GAMs in R: A free, interactive course using mgcv. https://noamross.github.io/gams-in-r-course/\nClark, Michael. Generalised Additive Models. https://m-clark.github.io/generalized-additive-models/"
+  },
+  {
     "objectID": "extra.html#book",
     "href": "extra.html#book",
     "title": "Extra",
@@ -25,13 +32,13 @@
     "href": "index.html",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "",
-    "text": "Welcome! This is the website of the workshop Learn Generalised Additive (Mixed) Models.\nHead off to the Set-up page for pre-workshop installation instructions.\nDownload the Starter Kit from https://github.com/stefanocoretta/learnGAMKit (click on the green button “Code” > Download ZIP)."
+    "text": "Welcome! This is the website of the workshop Learn Generalised Additive (Mixed) Models.\nHead off to the Set-up page for pre-workshop installation instructions.\nDownload the Starter Kit from https://github.com/stefanocoretta/learnGAMKit (click on the green button “Code” &gt; Download ZIP)."
   },
   {
     "objectID": "setup.html",
     "href": "setup.html",
     "title": "Set-up",
     "section": "",
-    "text": "Please, have the following software installed on your laptop.\n\nR (latest version): https://www.r-project.org\n\nIf for other software constraints reasons you cannot upgrade to the latest version, anything > 3.3.3 should work.\n\nRStudio (latest version): https://posit.co/downloads/\nThe following R packages, available on CRAN:\n\ntidyverse\nmgcv\n\nThe following package available on GitHub (please, install the development version)\n\ntidygam: https://github.com/stefanocoretta/tidygam\n\n\nBe sure to update all of your other R packages."
+    "text": "Please, have the following software installed on your laptop.\n\nR (latest version): https://www.r-project.org\n\nIf for other software constraints reasons you cannot upgrade to the latest version, anything &gt; 3.3.3 should work.\n\nRStudio (latest version): https://posit.co/downloads/\nThe following R packages, available on CRAN:\n\ntidyverse\nmgcv\ntidygam.\n\n\nBe sure to update all of your other R packages."
   }
 ]
