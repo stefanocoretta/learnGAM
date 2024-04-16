@@ -2,7 +2,7 @@
 title: "Learn Generalised Additive (Mixed) Models"
 author: "Dr Stefano Coretta"
 institute: "University of Edinburgh"
-date: "2023/05/18"
+date: "2024/04/18"
 format: 
   mono-light-revealjs:
     theme: [default, "custom.scss"]
