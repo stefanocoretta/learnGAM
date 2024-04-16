@@ -6,7 +6,7 @@ project:
     - "*.qmd"
     - "!data/"
   resources:
-    - "slides/"
+    # - "slides/"
     # - "img/"
     - "data/"
 
@@ -20,7 +20,7 @@ website:
         text: Set-up
       - text: Slides
         menu:
-          - href: "slides/short/"
+          - href: "slides/short.qmd"
             text: "Short course"
       - href: extra.qmd
         text: Extra
@@ -31,5 +31,5 @@ format:
     css: styles.css
     toc: true
 
-
+freeze: auto
 

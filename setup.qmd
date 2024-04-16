@@ -2,6 +2,8 @@
 title: "Set-up"
 ---
 
+## Software to install
+
 Please, have the following software installed on your laptop.
 
 - R (latest version): <https://www.r-project.org>
@@ -10,6 +12,20 @@ Please, have the following software installed on your laptop.
 - The following `R` packages, available on CRAN:
     - `tidyverse`
     - `mgcv`
-    - `tidygam`.
+    - `remotes`
+- You need to install the developmental version of `tidygam`, with the following code:
+    - `remotes::install_github("stefanocoretta/tidygam@devel")`.
 
 Be sure to update all of your other `R` packages.
+
+## Workshop materials
+
+Download the materials of the workshop from <https://github.com/stefanocoretta/learnGAM> (click on the green button "Code" > Download ZIP).
+
+::: callout-tip
+This is an RStudio project. You can open it by double clicking on the `learnGAM.Rproj` file.
+:::
+
+::: callout-important
+Before opening the RStudio project, please remove the `.Rprofile` file (if you can't see this file, you have to enable the show hidden files option on your operating system). This will deactivate renv (an R package manager).
+:::
