@@ -88,14 +88,14 @@
     "href": "slides/short.html#number-of-knots-k",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "Number of knots k",
-    "text": "Number of knots k\n\n\nThe “wiggliness” of the resulting spline is partially constrained by the number of knots (k).\nThe more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.\n\n\n\n\n\nYou can set the number of knots k with the argument k in s().\nk cannot be larger than the number of “sampling points” in the variable to smooth over."
+    "text": "Number of knots k\n\n\nThe “wiggliness” of the resulting curve is partially constrained by the number of knots (k).\nThe more knots, the more wiggly the curve can be. Or the more knots the less smooth the curve can be.\n\n\n\n\n\nYou can set the number of knots k with the argument k in s().\nk cannot be larger than the number of “sampling points” in the variable to smooth over."
   },
   {
     "objectID": "slides/short.html#comparing-groups",
     "href": "slides/short.html#comparing-groups",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "Comparing groups",
-    "text": "Comparing groups\n\n\nComparing levels from a variable (like age: young vs old) can be achieved with the by-variable method,\n\ni.e. by specifying the variable as the value of the by argument in s().\n\n\n\n\n\npdq_gam_3a &lt;- bam(\n  pupil_z ~\n    s(timebins, by = Age, k = 20),\n  data = pdq_20\n)"
+    "text": "Comparing groups\n\n\nComparing levels from a variable (like age: young vs old) can be achieved with the by-variable method,\n\ni.e. by specifying the variable as the value of the by argument in s().\n\nby-variables have to be factors.\n\n\n\n\n\npdq_gam_3 &lt;- bam(\n  pupil_z ~\n    Age +\n    s(timebins, by = Age),\n  data = pdq_20\n)"
   },
   {
     "objectID": "slides/short.html#random-effects",
@@ -109,7 +109,7 @@
     "href": "slides/short.html#comparing-across-groups-interactions",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "Comparing across groups (interactions)",
-    "text": "Comparing across groups (interactions)\n\nTechnically, GAMs don’t allow interactions.\n\nThey are ADDITIVE (interactions require multiplication).\n\n\n\n\nWe can get interaction-like comparisons by creating factor interactions and using them as by-variables."
+    "text": "Comparing across groups (interactions)\n\nTechnically, GAMs don’t allow interactions.\n\nThey are ADDITIVE (interactions require multiplication).\n\n\n\n\nWe can get interaction-like comparisons by creating factor interactions and using them as by-variables. (Note that factor interactions are not the same thing as factor smooth interactions)."
   },
   {
     "objectID": "slides/short.html#part-ii",
@@ -137,7 +137,7 @@
     "href": "slides/short.html#summary",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "Summary",
-    "text": "Summary\n\nsummary(pdq_gam_3a)\n\n\nFamily: gaussian \nLink function: identity \n\nFormula:\npupil_z ~ s(timebins, by = Age, k = 20)\n\nParametric coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept) 0.001158   0.003315   0.349    0.727\n\nApproximate significance of smooth terms:\n                    edf Ref.df      F p-value\ns(timebins):AgeYA 11.32  13.71 144.37  &lt;2e-16\ns(timebins):AgeOA 10.14  12.40  82.94  &lt;2e-16\n\nR-sq.(adj) =  0.033   Deviance explained = 3.33%\nfREML = 1.2344e+05  Scale est. = 0.96698   n = 88008\n\n\n\nBut what about comparing YA and OA?"
+    "text": "Summary\n\nsummary(pdq_gam_3)\n\n\nFamily: gaussian \nLink function: identity \n\nFormula:\npupil_z ~ Age + s(timebins, by = Age)\n\nParametric coefficients:\n             Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept)  0.029418   0.004512   6.520 7.06e-11\nAgeOA       -0.061471   0.006648  -9.246  &lt; 2e-16\n\nApproximate significance of smooth terms:\n                    edf Ref.df     F p-value\ns(timebins):AgeYA 8.270  8.854 223.2  &lt;2e-16\ns(timebins):AgeOA 8.109  8.787 116.9  &lt;2e-16\n\nR-sq.(adj) =  0.0339   Deviance explained = 3.41%\nfREML = 1.2341e+05  Scale est. = 0.96613   n = 88008"
   },
   {
     "objectID": "slides/short.html#predict",
@@ -193,7 +193,7 @@
     "href": "slides/short.html#summary-1",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "Summary",
-    "text": "Summary\n\nsummary(pdq_gam_3a)\n\n\nFamily: gaussian \nLink function: identity \n\nFormula:\npupil_z ~ s(timebins, by = Age, k = 20)\n\nParametric coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept) 0.001158   0.003315   0.349    0.727\n\nApproximate significance of smooth terms:\n                    edf Ref.df      F p-value\ns(timebins):AgeYA 11.32  13.71 144.37  &lt;2e-16\ns(timebins):AgeOA 10.14  12.40  82.94  &lt;2e-16\n\nR-sq.(adj) =  0.033   Deviance explained = 3.33%\nfREML = 1.2344e+05  Scale est. = 0.96698   n = 88008\n\n\n\nBut what about comparing YA and OA?"
+    "text": "Summary\n\nsummary(pdq_gam_4)\n\n\nFamily: gaussian \nLink function: identity \n\nFormula:\npupil_z ~ Age + s(timebins, by = Age) + s(timebins, subject, \n    bs = \"fs\", m = 1)\n\nParametric coefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept)  0.02897    0.06406   0.452    0.651\nAgeOA       -0.06099    0.09061  -0.673    0.501\n\nApproximate significance of smooth terms:\n                        edf  Ref.df      F p-value\ns(timebins):AgeYA     7.274   7.733  9.943  &lt;2e-16\ns(timebins):AgeOA     6.968   7.491  6.174  &lt;2e-16\ns(timebins,subject) 140.129 178.000 33.486  &lt;2e-16\n\nR-sq.(adj) =  0.0951   Deviance explained = 9.67%\nfREML = 1.2073e+05  Scale est. = 0.90486   n = 88008"
   },
   {
     "objectID": "slides/short.html#compare-levels",
@@ -368,7 +368,7 @@
     "href": "slides/short.html#the-data",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "The data",
-    "text": "The data\n\npdq_20 &lt;- readRDS(\"data/pdq_20.rds\") %&gt;%\n  mutate(\n    Condition = factor(Condition, levels = c(\"Sparse\", \"Dense\")),\n    Age = factor(Age, levels = c(\"YA\", \"OA\")),\n    pupil_z = (pupil.binned - mean(pupil.binned)) / sd(pupil.binned)\n  )\n\npdq_20\n\n# A tibble: 88,008 × 8\n   subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z\n     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;\n 1       1     1 Sparse    YA        -500 NAMword_675_Mul…       84.5    0.00347\n 2       1     1 Sparse    YA        -480 NAMword_675_Mul…       75.8   -0.0239 \n 3       1     1 Sparse    YA        -460 NAMword_675_Mul…       65.4   -0.0570 \n 4       1     1 Sparse    YA        -440 NAMword_675_Mul…       54.3   -0.0922 \n 5       1     1 Sparse    YA        -420 NAMword_675_Mul…       35.7   -0.151  \n 6       1     1 Sparse    YA        -400 NAMword_675_Mul…       20.2   -0.200  \n 7       1     1 Sparse    YA        -380 NAMword_675_Mul…        8.72  -0.237  \n 8       1     1 Sparse    YA        -360 NAMword_675_Mul…        0.680 -0.262  \n 9       1     1 Sparse    YA        -340 NAMword_675_Mul…      -11.4   -0.300  \n10       1     1 Sparse    YA        -320 NAMword_675_Mul…      -23.3   -0.338  \n# ℹ 87,998 more rows"
+    "text": "The data\n\npdq_20 &lt;- readRDS(\"data/pdq_20.rds\") %&gt;%\n  mutate(\n    Condition = factor(Condition, levels = c(\"Sparse\", \"Dense\")),\n    Age = factor(Age, levels = c(\"YA\", \"OA\")),\n    pupil_z = (pupil.binned - mean(pupil.binned)) / sd(pupil.binned)\n  )\npdq_20\n\n# A tibble: 88,008 × 8\n   subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z\n     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;\n 1       1     1 Sparse    YA        -500 NAMword_675_Mul…       84.5    0.00347\n 2       1     1 Sparse    YA        -480 NAMword_675_Mul…       75.8   -0.0239 \n 3       1     1 Sparse    YA        -460 NAMword_675_Mul…       65.4   -0.0570 \n 4       1     1 Sparse    YA        -440 NAMword_675_Mul…       54.3   -0.0922 \n 5       1     1 Sparse    YA        -420 NAMword_675_Mul…       35.7   -0.151  \n 6       1     1 Sparse    YA        -400 NAMword_675_Mul…       20.2   -0.200  \n 7       1     1 Sparse    YA        -380 NAMword_675_Mul…        8.72  -0.237  \n 8       1     1 Sparse    YA        -360 NAMword_675_Mul…        0.680 -0.262  \n 9       1     1 Sparse    YA        -340 NAMword_675_Mul…      -11.4   -0.300  \n10       1     1 Sparse    YA        -320 NAMword_675_Mul…      -23.3   -0.338  \n# ℹ 87,998 more rows"
   },
   {
     "objectID": "slides/short.html#the-data-plot",
@@ -403,6 +403,195 @@
     "href": "slides/short.html#a-simple-gam-model-summary-1",
     "title": "Learn Generalised Additive (Mixed) Models",
     "section": "A simple GAM: model summary",
-    "text": "A simple GAM: model summary\n\ncat(capture.output(summary(pdq_gam))[8:14], sep = \"\\n\")\n\nParametric coefficients:\n              Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept) -2.607e-14  3.316e-03       0        1\n\nApproximate significance of smooth terms:\n              edf Ref.df     F p-value\ns(timebins) 7.891  8.679 334.7  &lt;2e-16\n\n\n\n\nThe parametric term’s coefficient is an estimate of the mean height.\nThe smooth’s EDFs (estimated degrees of freedom) indicate whether it is a straight line (EDF = 1) or not."
+    "text": "A simple GAM: model summary\n\n\nParametric coefficients:\n              Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept) -2.607e-14  3.316e-03       0        1\n\nApproximate significance of smooth terms:\n              edf Ref.df     F p-value\ns(timebins) 7.891  8.679 334.7  &lt;2e-16\n\n\n\n\nThe parametric term’s coefficient is an estimate of the mean height.\nThe smooth’s EDFs (estimated degrees of freedom) indicate whether it is a straight line (EDF = 1) or not."
+  },
+  {
+    "objectID": "slides/short.html#a-simple-gam-predict-pupil-size",
+    "href": "slides/short.html#a-simple-gam-predict-pupil-size",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "A simple GAM: predict pupil size",
+    "text": "A simple GAM: predict pupil size\n\nlibrary(tidygam)\n\npredict_gam(pdq_gam)\n\n# A tibble: 11 × 5\n   timebins  pupil_z      se lower_ci[,1] upper_ci[,1]\n      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;\n 1     -500 -0.258   0.0181       -0.294      -0.223  \n 2     -116 -0.273   0.00990      -0.293      -0.254  \n 3      268 -0.226   0.00941      -0.244      -0.208  \n 4      652 -0.0196  0.00925      -0.0378     -0.00152\n 5     1036  0.224   0.00916       0.207       0.242  \n 6     1420  0.283   0.00912       0.265       0.301  \n 7     1804  0.154   0.00916       0.136       0.172  \n 8     2188  0.0386  0.00925       0.0205      0.0568 \n 9     2572  0.00188 0.00941      -0.0166      0.0203 \n10     2956 -0.0261  0.00990      -0.0455     -0.00666\n11     3340 -0.0391  0.0181       -0.0746     -0.00359"
+  },
+  {
+    "objectID": "slides/short.html#a-simple-gam-plot-predicted-pupil-size",
+    "href": "slides/short.html#a-simple-gam-plot-predicted-pupil-size",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "A simple GAM: plot predicted pupil size",
+    "text": "A simple GAM: plot predicted pupil size\n\npredict_gam(pdq_gam) %&gt;% plot(series = \"timebins\")"
+  },
+  {
+    "objectID": "slides/short.html#increase-length_out-for-smoother-curves",
+    "href": "slides/short.html#increase-length_out-for-smoother-curves",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Increase length_out for smoother curves",
+    "text": "Increase length_out for smoother curves\n\npredict_gam(pdq_gam, length_out = 100) %&gt;% plot(series = \"timebins\")"
+  },
+  {
+    "objectID": "slides/short.html#setting-k-3",
+    "href": "slides/short.html#setting-k-3",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Setting k = 3",
+    "text": "Setting k = 3\n\n# Use bam(): Big gAM\npdq_gam_2 &lt;- bam(\n  pupil_z ~\n    s(timebins, k = 3),\n  data = pdq_20\n)"
+  },
+  {
+    "objectID": "slides/short.html#k-3-plot-predictions",
+    "href": "slides/short.html#k-3-plot-predictions",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "k = 3: plot predictions",
+    "text": "k = 3: plot predictions\n\npredict_gam(pdq_gam_2, length_out = 25) %&gt;% plot(series = \"timebins\")"
+  },
+  {
+    "objectID": "slides/short.html#k-20",
+    "href": "slides/short.html#k-20",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "k = 20",
+    "text": "k = 20\n\npdq_gam_2 &lt;- bam(\n  pupil_z ~\n    s(timebins, k = 20),\n  data = pdq_20\n)"
+  },
+  {
+    "objectID": "slides/short.html#k-20-plot-predictions",
+    "href": "slides/short.html#k-20-plot-predictions",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "k = 20: plot predictions",
+    "text": "k = 20: plot predictions\n\npredict_gam(pdq_gam_2, length_out = 100) %&gt;% plot(series = \"timebins\")"
+  },
+  {
+    "objectID": "slides/short.html#plot-predictions-of-groups",
+    "href": "slides/short.html#plot-predictions-of-groups",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot predictions of groups",
+    "text": "Plot predictions of groups\n\npredict_gam(pdq_gam_3, length_out = 100) %&gt;% plot(series = \"timebins\", comparison = \"Age\")"
+  },
+  {
+    "objectID": "slides/short.html#get-difference-between-curves",
+    "href": "slides/short.html#get-difference-between-curves",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Get difference between curves",
+    "text": "Get difference between curves\n\npdq_gam_3_diff &lt;- get_difference(\n  pdq_gam_3, series = \"timebins\", length_out = 100,\n  compare = list(Age = c(\"OA\", \"YA\"))\n)\npdq_gam_3_diff\n\n# A tibble: 101 × 6\n   Age   timebins      diff     se lower_ci upper_ci\n   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;\n 1 OA-YA    -500  -0.00580  0.0369  -0.0782   0.0666\n 2 OA-YA    -462. -0.00347  0.0321  -0.0663   0.0594\n 3 OA-YA    -423. -0.00120  0.0276  -0.0553   0.0529\n 4 OA-YA    -385.  0.000892 0.0239  -0.0459   0.0477\n 5 OA-YA    -346.  0.00267  0.0210  -0.0386   0.0439\n 6 OA-YA    -308   0.00396  0.0193  -0.0340   0.0419\n 7 OA-YA    -270.  0.00461  0.0187  -0.0321   0.0413\n 8 OA-YA    -231.  0.00446  0.0189  -0.0326   0.0415\n 9 OA-YA    -193.  0.00342  0.0194  -0.0347   0.0415\n10 OA-YA    -154.  0.00139  0.0200  -0.0378   0.0406\n# ℹ 91 more rows"
+  },
+  {
+    "objectID": "slides/short.html#plot-difference-between-curves",
+    "href": "slides/short.html#plot-difference-between-curves",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot difference between curves",
+    "text": "Plot difference between curves\n\npdq_gam_3_diff %&gt;% plot()"
+  },
+  {
+    "objectID": "slides/short.html#random-effects-with-factor-smooth-interactions",
+    "href": "slides/short.html#random-effects-with-factor-smooth-interactions",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Random effects with “factor smooth interactions”",
+    "text": "Random effects with “factor smooth interactions”\n\nFactor smooth interaction: * Specified with bs = \"fs\" in s(). * A smooth is fitted at each level of a factor. * NOTE: it has interaction in the name but has nothing to do with interactions.\nThe random effect variable needs to be a factor."
+  },
+  {
+    "objectID": "slides/short.html#subject-as-factor",
+    "href": "slides/short.html#subject-as-factor",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Subject as factor",
+    "text": "Subject as factor\nLet’s change subject to a factor.\n\npdq_20 &lt;- pdq_20 %&gt;%\n  mutate(\n    subject = as.factor(subject)\n  )\npdq_20\n\n# A tibble: 88,008 × 8\n   subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z\n   &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;\n 1 1           1 Sparse    YA        -500 NAMword_675_Mul…       84.5    0.00347\n 2 1           1 Sparse    YA        -480 NAMword_675_Mul…       75.8   -0.0239 \n 3 1           1 Sparse    YA        -460 NAMword_675_Mul…       65.4   -0.0570 \n 4 1           1 Sparse    YA        -440 NAMword_675_Mul…       54.3   -0.0922 \n 5 1           1 Sparse    YA        -420 NAMword_675_Mul…       35.7   -0.151  \n 6 1           1 Sparse    YA        -400 NAMword_675_Mul…       20.2   -0.200  \n 7 1           1 Sparse    YA        -380 NAMword_675_Mul…        8.72  -0.237  \n 8 1           1 Sparse    YA        -360 NAMword_675_Mul…        0.680 -0.262  \n 9 1           1 Sparse    YA        -340 NAMword_675_Mul…      -11.4   -0.300  \n10 1           1 Sparse    YA        -320 NAMword_675_Mul…      -23.3   -0.338  \n# ℹ 87,998 more rows"
+  },
+  {
+    "objectID": "slides/short.html#fit-model-with-random-smooths",
+    "href": "slides/short.html#fit-model-with-random-smooths",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Fit model with random smooths",
+    "text": "Fit model with random smooths\n\npdq_gam_4 &lt;- bam(\n  pupil_z ~\n    # Parametric term\n    Age +\n    # Smooth term\n    s(timebins, by = Age) +\n    # Factor smooth interaction by subject\n    s(timebins, subject, bs = \"fs\", m = 1),\n  data = pdq_20\n)"
+  },
+  {
+    "objectID": "slides/short.html#plot-pupil-size-by-age",
+    "href": "slides/short.html#plot-pupil-size-by-age",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot pupil size by Age",
+    "text": "Plot pupil size by Age\n\npredict_gam(pdq_gam_4, length_out = 100, exclude_terms = \"s(timebins,subject)\", values = c(subject = \"1\")) %&gt;%\n  plot(series = \"timebins\", comparison = \"Age\")"
+  },
+  {
+    "objectID": "slides/short.html#get-difference-by-age",
+    "href": "slides/short.html#get-difference-by-age",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Get difference by Age",
+    "text": "Get difference by Age\n\npdq_gam_4_diff &lt;- tidygam::get_difference(\n  pdq_gam_4, series = \"timebins\", length_out = 100, exclude_terms = \"s(timebins,subject)\",\n  compare = list(Age = c(\"OA\", \"YA\"))\n)"
+  },
+  {
+    "objectID": "slides/short.html#plot-difference-by-age",
+    "href": "slides/short.html#plot-difference-by-age",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot difference by Age",
+    "text": "Plot difference by Age\n\npdq_gam_4_diff %&gt;% plot()"
+  },
+  {
+    "objectID": "slides/short.html#factor-smooth-interactions-by-subject",
+    "href": "slides/short.html#factor-smooth-interactions-by-subject",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Factor smooth interactions by subject",
+    "text": "Factor smooth interactions by subject\n\nplot(pdq_gam_4, select = 3)"
+  },
+  {
+    "objectID": "slides/short.html#factor-interactions",
+    "href": "slides/short.html#factor-interactions",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Factor interactions",
+    "text": "Factor interactions\n\n\nLet’s create a factor interaction between Age and Condition.\nNote that the model will include only this factor interaction (no need for Age and Condition separately).\n\n\n\n\npdq_20 &lt;- pdq_20 %&gt;%\n  mutate(\n    Age_Cond = interaction(Age, Condition)\n  )"
+  },
+  {
+    "objectID": "slides/short.html#fit-the-model-with-age_cond",
+    "href": "slides/short.html#fit-the-model-with-age_cond",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Fit the model with Age_Cond",
+    "text": "Fit the model with Age_Cond\n\npdq_gam_5 &lt;- bam(\n  pupil_z ~\n    # Parametric term\n    Age_Cond +\n    # Smooth term\n    s(timebins, by = Age_Cond, k = 20) +\n    # Factor smooth interaction by subject\n    s(timebins, subject, bs = \"fs\", m = 1),\n  data = pdq_20\n)"
+  },
+  {
+    "objectID": "slides/short.html#model-summary",
+    "href": "slides/short.html#model-summary",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Model summary",
+    "text": "Model summary\n\nsummary(pdq_gam_5)\n\n\nFamily: gaussian \nLink function: identity \n\nFormula:\npupil_z ~ Age_Cond + s(timebins, by = Age_Cond, k = 20) + s(timebins, \n    subject, bs = \"fs\", m = 1)\n\nParametric coefficients:\n                   Estimate Std. Error t value Pr(&gt;|t|)\n(Intercept)        0.003547   0.064262   0.055    0.956\nAge_CondOA.Sparse -0.037032   0.090907  -0.407    0.684\nAge_CondYA.Dense   0.047044   0.008803   5.344 9.12e-08\nAge_CondOA.Dense  -0.034171   0.090893  -0.376    0.707\n\nApproximate significance of smooth terms:\n                                  edf  Ref.df      F  p-value\ns(timebins):Age_CondYA.Sparse   8.711  10.672  6.237  &lt; 2e-16\ns(timebins):Age_CondOA.Sparse   5.027   6.040  3.191 0.003875\ns(timebins):Age_CondYA.Dense    8.002   9.779  6.464  &lt; 2e-16\ns(timebins):Age_CondOA.Dense    6.191   7.582  4.061 0.000126\ns(timebins,subject)           144.275 178.000 33.697  &lt; 2e-16\n\nR-sq.(adj) =  0.0958   Deviance explained = 9.76%\nfREML = 1.2073e+05  Scale est. = 0.9042    n = 88008"
+  },
+  {
+    "objectID": "slides/short.html#plot-predictions-by-age_cond",
+    "href": "slides/short.html#plot-predictions-by-age_cond",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot predictions by Age_Cond",
+    "text": "Plot predictions by Age_Cond\n\npredict_gam(pdq_gam_5, length_out = 100, exclude_terms = \"s(timebins,subject)\", values = c(subject = \"1\")) %&gt;%\n  plot(series = \"timebins\", comparison = \"Age_Cond\")"
+  },
+  {
+    "objectID": "slides/short.html#separate-age_cond",
+    "href": "slides/short.html#separate-age_cond",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Separate Age_Cond",
+    "text": "Separate Age_Cond\n\npdq_gam_5_pred_2 &lt;- predict_gam(\n  pdq_gam_5, length_out = 100, exclude_terms = \"s(timebins,subject)\",\n  values = c(subject = \"1\"),\n  separate = list(Age_Cond = c(\"Age\", \"Condition\"))\n) %&gt;%\n  # The separate arguments returns variables with default alphabetical order.\n  # Let's reorder the levels in Condition and Age.\n  mutate(\n    Condition = factor(Condition, levels = c(\"Sparse\", \"Dense\")),\n    Age = factor(Age, levels = c(\"YA\", \"OA\")),\n  )"
+  },
+  {
+    "objectID": "slides/short.html#plot-predictions-by-condition-for-each-age-group",
+    "href": "slides/short.html#plot-predictions-by-condition-for-each-age-group",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot predictions by Condition for each Age group",
+    "text": "Plot predictions by Condition for each Age group\n\npdq_gam_5_pred_2 %&gt;% plot(series = \"timebins\", comparison = \"Condition\") + facet_grid(~ Age)"
+  },
+  {
+    "objectID": "slides/short.html#get-difference-in-age-ya",
+    "href": "slides/short.html#get-difference-in-age-ya",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Get difference in Age = YA",
+    "text": "Get difference in Age = YA\n\npdq_gam_5_diff &lt;- get_difference(\n  pdq_gam_5, series = \"timebins\", length_out = 100, exclude_terms = \"s(timebins,subject)\",\n  compare = list(Age_Cond = c(\"YA.Dense\", \"YA.Sparse\"))\n)"
+  },
+  {
+    "objectID": "slides/short.html#plot-difference-in-age-ya",
+    "href": "slides/short.html#plot-difference-in-age-ya",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot difference in Age = YA",
+    "text": "Plot difference in Age = YA\n\npdq_gam_5_diff %&gt;% plot()"
+  },
+  {
+    "objectID": "slides/short.html#get-difference-in-age-oa",
+    "href": "slides/short.html#get-difference-in-age-oa",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Get difference in Age = OA",
+    "text": "Get difference in Age = OA\n\npdq_gam_5_diff_2 &lt;- get_difference(\n  pdq_gam_5, series = \"timebins\", length_out = 100, exclude_terms = \"s(timebins,subject)\",\n  compare = list(Age_Cond = c(\"OA.Dense\", \"OA.Sparse\"))\n)"
+  },
+  {
+    "objectID": "slides/short.html#plot-difference-in-age-oa",
+    "href": "slides/short.html#plot-difference-in-age-oa",
+    "title": "Learn Generalised Additive (Mixed) Models",
+    "section": "Plot difference in Age = OA",
+    "text": "Plot difference in Age = OA\n\npdq_gam_5_diff_2 %&gt;% plot()"
   }
 ]

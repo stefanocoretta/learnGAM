@@ -504,8 +504,7 @@ Dr Stefano Coretta
 <span id="cb2-4"><a></a>    <span class="at">Age =</span> <span class="fu">factor</span>(Age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"YA"</span>, <span class="st">"OA"</span>)),</span>
 <span id="cb2-5"><a></a>    <span class="at">pupil_z =</span> (pupil.binned <span class="sc">-</span> <span class="fu">mean</span>(pupil.binned)) <span class="sc">/</span> <span class="fu">sd</span>(pupil.binned)</span>
 <span id="cb2-6"><a></a>  )</span>
-<span id="cb2-7"><a></a></span>
-<span id="cb2-8"><a></a>pdq_20</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a>pdq_20</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 88,008 × 8
    subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z
@@ -570,7 +569,6 @@ GCV = 0.96804  Scale est. = 0.96794   n = 88008</code></pre>
 <section id="a-simple-gam-model-summary-1" class="slide level2">
 <h2>A simple GAM: model summary</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">cat</span>(<span class="fu">capture.output</span>(<span class="fu">summary</span>(pdq_gam))[<span class="dv">8</span><span class="sc">:</span><span class="dv">14</span>], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Parametric coefficients:
               Estimate Std. Error t value Pr(&gt;|t|)
@@ -583,46 +581,46 @@ s(timebins) 7.891  8.679 334.7  &lt;2e-16</code></pre>
 </div>
 <div class="box-tip">
 <ul>
-<li><p>The parametric term’s coefficient is an estimate of the mean height.</p></li>
-<li><p>The smooth’s EDFs (estimated degrees of freedom) indicate whether it is a straight line (EDF = 1) or not.</p></li>
+<li><p>The <strong>parametric term</strong>’s coefficient is an estimate of the mean height.</p></li>
+<li><p>The <strong>smooth</strong>’s EDFs (estimated degrees of freedom) indicate whether it is a straight line (EDF = 1) or not.</p></li>
 </ul>
 </div>
 </section>
-<section id="predict" class="slide level2">
-<h2>Predict</h2>
+<section id="a-simple-gam-predict-pupil-size" class="slide level2">
+<h2>A simple GAM: predict pupil size</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">library</span>(tidygam)</span>
-<span id="cb9-2"><a></a></span>
-<span id="cb9-3"><a></a><span class="fu">predict_gam</span>(pdq_gam)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">library</span>(tidygam)</span>
+<span id="cb8-2"><a></a></span>
+<span id="cb8-3"><a></a><span class="fu">predict_gam</span>(pdq_gam)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 5
-   timebins   pupil_z        se  lower_ci  upper_ci
-      &lt;dbl&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt; &lt;dbl[1d]&gt;
- 1     -500  -0.258     0.0181    -0.294   -0.223  
- 2     -116  -0.273     0.00990   -0.293   -0.254  
- 3      268  -0.226     0.00941   -0.244   -0.208  
- 4      652  -0.0196    0.00925   -0.0378  -0.00152
- 5     1036   0.224     0.00916    0.207    0.242  
- 6     1420   0.283     0.00912    0.265    0.301  
- 7     1804   0.154     0.00916    0.136    0.172  
- 8     2188   0.0386    0.00925    0.0205   0.0568 
- 9     2572   0.00188   0.00941   -0.0166   0.0203 
-10     2956  -0.0261    0.00990   -0.0455  -0.00666
-11     3340  -0.0391    0.0181    -0.0746  -0.00359</code></pre>
+   timebins  pupil_z      se lower_ci[,1] upper_ci[,1]
+      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+ 1     -500 -0.258   0.0181       -0.294      -0.223  
+ 2     -116 -0.273   0.00990      -0.293      -0.254  
+ 3      268 -0.226   0.00941      -0.244      -0.208  
+ 4      652 -0.0196  0.00925      -0.0378     -0.00152
+ 5     1036  0.224   0.00916       0.207       0.242  
+ 6     1420  0.283   0.00912       0.265       0.301  
+ 7     1804  0.154   0.00916       0.136       0.172  
+ 8     2188  0.0386  0.00925       0.0205      0.0568 
+ 9     2572  0.00188 0.00941      -0.0166      0.0203 
+10     2956 -0.0261  0.00990      -0.0455     -0.00666
+11     3340 -0.0391  0.0181       -0.0746     -0.00359</code></pre>
 </div>
 </div>
 </section>
-<section id="plot" class="slide level2">
-<h2>Plot</h2>
+<section id="a-simple-gam-plot-predicted-pupil-size" class="slide level2">
+<h2>A simple GAM: plot predicted pupil size</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">predict_gam</span>(pdq_gam) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">predict_gam</span>(pdq_gam) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-plot-1.png" width="960" class="r-stretch"></section>
-<section id="plot-1" class="slide level2">
-<h2>Plot</h2>
+<section id="increase-length_out-for-smoother-curves" class="slide level2">
+<h2>Increase <code>length_out</code> for smoother curves</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">predict_gam</span>(pdq_gam, <span class="at">length_out =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">predict_gam</span>(pdq_gam, <span class="at">length_out =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-plot-2-1.png" width="960" class="r-stretch"></section>
@@ -630,8 +628,8 @@ s(timebins) 7.891  8.679 334.7  &lt;2e-16</code></pre>
 <h2>Number of knots <code>k</code></h2>
 <div class="box-tip">
 <ul>
-<li><p>The “wiggliness” of the resulting spline is partially constrained by the number of <em>knots</em> (<code>k</code>).</p></li>
-<li><p>The more knots, the more wiggly the spline can be. Or the more knots the less smooth the spline can be.</p></li>
+<li><p>The “wiggliness” of the resulting curve is partially constrained by the number of <em>knots</em> (<code>k</code>).</p></li>
+<li><p>The more knots, the more wiggly the curve can be. Or the more knots the less smooth the curve can be.</p></li>
 </ul>
 </div>
 <div class="fragment">
@@ -643,38 +641,38 @@ s(timebins) 7.891  8.679 334.7  &lt;2e-16</code></pre>
 </div>
 </div>
 </section>
-<section id="setting-k" class="slide level2">
-<h2>Setting <code>k</code></h2>
+<section id="setting-k-3" class="slide level2">
+<h2>Setting <code>k = 3</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># Use bam(): Big gAM</span></span>
-<span id="cb13-2"><a></a>pdq_gam_2 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
-<span id="cb13-3"><a></a>  pupil_z <span class="sc">~</span></span>
-<span id="cb13-4"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">3</span>),</span>
-<span id="cb13-5"><a></a>  <span class="at">data =</span> pdq_20</span>
-<span id="cb13-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># Use bam(): Big gAM</span></span>
+<span id="cb12-2"><a></a>pdq_gam_2 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
+<span id="cb12-3"><a></a>  pupil_z <span class="sc">~</span></span>
+<span id="cb12-4"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">3</span>),</span>
+<span id="cb12-5"><a></a>  <span class="at">data =</span> pdq_20</span>
+<span id="cb12-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot-2" class="slide level2">
-<h2>Plot</h2>
+<section id="k-3-plot-predictions" class="slide level2">
+<h2><code>k = 3</code>: plot predictions</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_2, <span class="at">length_out =</span> <span class="dv">25</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_2, <span class="at">length_out =</span> <span class="dv">25</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-2-plot-1.png" width="960" class="r-stretch"></section>
-<section id="plot-3" class="slide level2">
-<h2>Plot</h2>
+<section id="k-20" class="slide level2">
+<h2><code>k = 20</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>pdq_gam_2 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
-<span id="cb15-2"><a></a>  pupil_z <span class="sc">~</span></span>
-<span id="cb15-3"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">20</span>),</span>
-<span id="cb15-4"><a></a>  <span class="at">data =</span> pdq_20</span>
-<span id="cb15-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>pdq_gam_2 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
+<span id="cb14-2"><a></a>  pupil_z <span class="sc">~</span></span>
+<span id="cb14-3"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">20</span>),</span>
+<span id="cb14-4"><a></a>  <span class="at">data =</span> pdq_20</span>
+<span id="cb14-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="predict-1" class="slide level2">
-<h2>Predict</h2>
+<section id="k-20-plot-predictions" class="slide level2">
+<h2><code>k = 20</code>: plot predictions</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_2, <span class="at">length_out =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_2, <span class="at">length_out =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-2-2-plot-1.png" width="960" class="r-stretch"></section>
@@ -686,155 +684,85 @@ s(timebins) 7.891  8.679 334.7  &lt;2e-16</code></pre>
 <ul>
 <li>i.e.&nbsp;by specifying the variable as the value of the <code>by</code> argument in <code>s()</code>.</li>
 </ul></li>
+<li><p><code>by</code>-variables have to be <strong>factors</strong>.</p></li>
 </ul>
 </div>
 <div class="fragment">
+<p><br></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>pdq_gam_3a <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
-<span id="cb17-2"><a></a>  pupil_z <span class="sc">~</span></span>
-<span id="cb17-3"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age, <span class="at">k =</span> <span class="dv">20</span>),</span>
-<span id="cb17-4"><a></a>  <span class="at">data =</span> pdq_20</span>
-<span id="cb17-5"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>pdq_gam_3 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
+<span id="cb16-2"><a></a>  pupil_z <span class="sc">~</span></span>
+<span id="cb16-3"><a></a>    Age <span class="sc">+</span></span>
+<span id="cb16-4"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age),</span>
+<span id="cb16-5"><a></a>  <span class="at">data =</span> pdq_20</span>
+<span id="cb16-6"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
 <section id="summary" class="slide level2">
 <h2>Summary</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">summary</span>(pdq_gam_3a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">summary</span>(pdq_gam_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Family: gaussian 
 Link function: identity 
 
 Formula:
-pupil_z ~ s(timebins, by = Age, k = 20)
+pupil_z ~ Age + s(timebins, by = Age)
 
 Parametric coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept) 0.001158   0.003315   0.349    0.727
-
-Approximate significance of smooth terms:
-                    edf Ref.df      F p-value
-s(timebins):AgeYA 11.32  13.71 144.37  &lt;2e-16
-s(timebins):AgeOA 10.14  12.40  82.94  &lt;2e-16
-
-R-sq.(adj) =  0.033   Deviance explained = 3.33%
-fREML = 1.2344e+05  Scale est. = 0.96698   n = 88008</code></pre>
-</div>
-</div>
-<div class="fragment">
-<p><strong>But what about comparing YA and OA?</strong></p>
-</div>
-</section>
-<section id="compare-levels" class="slide level2">
-<h2>Compare levels</h2>
-<div class="box-tip">
-<p>To compare levels to a reference level:</p>
-<ul>
-<li><p>Change factor to an <strong>ordered factor</strong>.</p></li>
-<li><p>Change factor contrasts to <strong>treatment contrasts</strong> (<code>contr.treatment</code>).</p>
-<ul>
-<li>The default in ordered factors is <code>contr.poly</code>, this won’t work.</li>
-</ul></li>
-<li><p>Include the factor as a <strong>parametric term</strong>.</p></li>
-<li><p>Include a <strong>reference smooth</strong> and a <strong>difference smooth</strong> with the <code>by</code>-variable.</p></li>
-</ul>
-</div>
-</section>
-<section id="section" class="slide level2">
-<h2></h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>pdq_20 <span class="ot">&lt;-</span> pdq_20 <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb20-3"><a></a>    <span class="co"># Make the variables into an ordered factor</span></span>
-<span id="cb20-4"><a></a>    <span class="at">Condition_o =</span> <span class="fu">as.ordered</span>(Condition),</span>
-<span id="cb20-5"><a></a>    <span class="at">Age_o =</span> <span class="fu">as.ordered</span>(Age)</span>
-<span id="cb20-6"><a></a>  )</span>
-<span id="cb20-7"><a></a></span>
-<span id="cb20-8"><a></a><span class="co"># Change the contrasts to treatment</span></span>
-<span id="cb20-9"><a></a><span class="fu">contrasts</span>(pdq_20<span class="sc">$</span>Condition_o) <span class="ot">&lt;-</span> <span class="st">"contr.treatment"</span></span>
-<span id="cb20-10"><a></a><span class="fu">contrasts</span>(pdq_20<span class="sc">$</span>Age_o) <span class="ot">&lt;-</span> <span class="st">"contr.treatment"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="section-1" class="slide level2">
-<h2></h2>
-<p>Let’s start with <code>Age_o</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>pdq_gam_3 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
-<span id="cb21-2"><a></a>  pupil_z <span class="sc">~</span></span>
-<span id="cb21-3"><a></a>    <span class="co"># Parametric term</span></span>
-<span id="cb21-4"><a></a>    Age_o <span class="sc">+</span></span>
-<span id="cb21-5"><a></a>    <span class="co"># Reference smooth (Age_0 == "YA")</span></span>
-<span id="cb21-6"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb21-7"><a></a>    <span class="co"># Difference smooth ("OA" - "YA")</span></span>
-<span id="cb21-8"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age_o, <span class="at">k =</span> <span class="dv">20</span>),</span>
-<span id="cb21-9"><a></a>  <span class="at">data =</span> pdq_20</span>
-<span id="cb21-10"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="section-2" class="slide level2">
-<h2></h2>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Parametric coefficients:
              Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)  0.029495   0.004512   6.537  6.3e-11
-Age_oOA     -0.061473   0.006648  -9.247  &lt; 2e-16
+(Intercept)  0.029418   0.004512   6.520 7.06e-11
+AgeOA       -0.061471   0.006648  -9.246  &lt; 2e-16
 
 Approximate significance of smooth terms:
-                       edf Ref.df       F p-value
-s(timebins)         11.985 14.367 138.652  &lt;2e-16
-s(timebins):Age_oOA  7.397  9.139   8.446  &lt;2e-16</code></pre>
+                    edf Ref.df     F p-value
+s(timebins):AgeYA 8.270  8.854 223.2  &lt;2e-16
+s(timebins):AgeOA 8.109  8.787 116.9  &lt;2e-16
+
+R-sq.(adj) =  0.0339   Deviance explained = 3.41%
+fREML = 1.2341e+05  Scale est. = 0.96613   n = 88008</code></pre>
 </div>
-</div>
-<div class="fragment">
-<p><br></p>
-<ul>
-<li><p><code>Intercept</code>: mean height when Age == “YA”.</p></li>
-<li><p><code>Age_oOA</code>: height difference between “OA” and “YA”.</p></li>
-<li><p><code>s(timebins)</code>: EDF &gt; 1 = trajectory is not a straight line.</p></li>
-<li><p><code>s(timebins):Age_oOA</code>: EDF &gt; 1 = trajectory of “OA” is different from “YA”.</p></li>
-</ul>
 </div>
 </section>
-<section id="section-3" class="slide level2">
-<h2></h2>
+<section id="plot-predictions-of-groups" class="slide level2">
+<h2>Plot predictions of groups</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_3, <span class="at">length_out =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Age_o"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_3, <span class="at">length_out =</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Age"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-3-plot-1.png" width="960" class="r-stretch"></section>
-<section id="section-4" class="slide level2">
-<h2></h2>
+<section id="get-difference-between-curves" class="slide level2">
+<h2>Get difference between curves</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>pdq_gam_3_diff <span class="ot">&lt;-</span> <span class="fu">get_difference</span>(</span>
-<span id="cb24-2"><a></a>  pdq_gam_3, <span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">length_out =</span> <span class="dv">100</span>,</span>
-<span id="cb24-3"><a></a>  <span class="at">compare =</span> <span class="fu">list</span>(<span class="at">Age_o =</span> <span class="fu">c</span>(<span class="st">"OA"</span>, <span class="st">"YA"</span>))</span>
-<span id="cb24-4"><a></a>)</span>
-<span id="cb24-5"><a></a>pdq_gam_3_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>pdq_gam_3_diff <span class="ot">&lt;-</span> <span class="fu">get_difference</span>(</span>
+<span id="cb20-2"><a></a>  pdq_gam_3, <span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">length_out =</span> <span class="dv">100</span>,</span>
+<span id="cb20-3"><a></a>  <span class="at">compare =</span> <span class="fu">list</span>(<span class="at">Age =</span> <span class="fu">c</span>(<span class="st">"OA"</span>, <span class="st">"YA"</span>))</span>
+<span id="cb20-4"><a></a>)</span>
+<span id="cb20-5"><a></a>pdq_gam_3_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 101 × 6
-   Age_o timebins      diff     se lower_ci upper_ci
+   Age   timebins      diff     se lower_ci upper_ci
    &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
- 1 OA-YA    -500   0.0102   0.0340  -0.0564   0.0767
- 2 OA-YA    -462.  0.00845  0.0296  -0.0496   0.0666
- 3 OA-YA    -423.  0.00673  0.0260  -0.0442   0.0576
- 4 OA-YA    -385.  0.00496  0.0231  -0.0403   0.0503
- 5 OA-YA    -346.  0.00313  0.0211  -0.0382   0.0444
- 6 OA-YA    -308   0.00119  0.0197  -0.0374   0.0398
- 7 OA-YA    -270. -0.000898 0.0188  -0.0378   0.0360
- 8 OA-YA    -231. -0.00316  0.0183  -0.0390   0.0327
- 9 OA-YA    -193. -0.00562  0.0180  -0.0410   0.0297
-10 OA-YA    -154. -0.00833  0.0180  -0.0435   0.0269
+ 1 OA-YA    -500  -0.00580  0.0369  -0.0782   0.0666
+ 2 OA-YA    -462. -0.00347  0.0321  -0.0663   0.0594
+ 3 OA-YA    -423. -0.00120  0.0276  -0.0553   0.0529
+ 4 OA-YA    -385.  0.000892 0.0239  -0.0459   0.0477
+ 5 OA-YA    -346.  0.00267  0.0210  -0.0386   0.0439
+ 6 OA-YA    -308   0.00396  0.0193  -0.0340   0.0419
+ 7 OA-YA    -270.  0.00461  0.0187  -0.0321   0.0413
+ 8 OA-YA    -231.  0.00446  0.0189  -0.0326   0.0415
+ 9 OA-YA    -193.  0.00342  0.0194  -0.0347   0.0415
+10 OA-YA    -154.  0.00139  0.0200  -0.0378   0.0406
 # ℹ 91 more rows</code></pre>
 </div>
 </div>
 </section>
-<section id="section-5" class="slide level2">
-<h2></h2>
+<section id="plot-difference-between-curves" class="slide level2">
+<h2>Plot difference between curves</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>pdq_gam_3_diff <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>pdq_gam_3_diff <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-3-diff-plot-1.png" width="960" class="r-stretch"></section>
@@ -858,24 +786,24 @@ s(timebins):Age_oOA  7.397  9.139   8.446  &lt;2e-16</code></pre>
 </div>
 </div>
 </section>
-<section id="section-6" class="slide level2">
-<h2></h2>
+<section id="random-effects-with-factor-smooth-interactions" class="slide level2">
+<h2>Random effects with “factor smooth interactions”</h2>
 <div class="box-tip">
 <p><strong>Factor smooth interaction</strong>: * Specified with <code>bs = "fs"</code> in <code>s()</code>. * A smooth is fitted at each level of a factor. * NOTE: it has <em>interaction</em> in the name but has nothing to do with interactions.</p>
 <p>The random effect variable <em>needs to be a factor</em>.</p>
 </div>
 </section>
-<section id="section-7" class="slide level2">
-<h2></h2>
-<p>Let’s change <code>subject</code> to a factor (no need to make it an ordered factor).</p>
+<section id="subject-as-factor" class="slide level2">
+<h2>Subject as factor</h2>
+<p>Let’s change <code>subject</code> to a factor.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>pdq_20 <span class="ot">&lt;-</span> pdq_20 <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb27-3"><a></a>    <span class="at">subject =</span> <span class="fu">as.factor</span>(subject)</span>
-<span id="cb27-4"><a></a>  )</span>
-<span id="cb27-5"><a></a>pdq_20</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>pdq_20 <span class="ot">&lt;-</span> pdq_20 <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-3"><a></a>    <span class="at">subject =</span> <span class="fu">as.factor</span>(subject)</span>
+<span id="cb23-4"><a></a>  )</span>
+<span id="cb23-5"><a></a>pdq_20</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 88,008 × 10
+<pre><code># A tibble: 88,008 × 8
    subject trial Condition Age   timebins Soundfile        pupil.binned  pupil_z
    &lt;fct&gt;   &lt;dbl&gt; &lt;fct&gt;     &lt;fct&gt;    &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;
  1 1           1 Sparse    YA        -500 NAMword_675_Mul…       84.5    0.00347
@@ -888,70 +816,82 @@ s(timebins):Age_oOA  7.397  9.139   8.446  &lt;2e-16</code></pre>
  8 1           1 Sparse    YA        -360 NAMword_675_Mul…        0.680 -0.262  
  9 1           1 Sparse    YA        -340 NAMword_675_Mul…      -11.4   -0.300  
 10 1           1 Sparse    YA        -320 NAMword_675_Mul…      -23.3   -0.338  
-# ℹ 87,998 more rows
-# ℹ 2 more variables: Condition_o &lt;ord&gt;, Age_o &lt;ord&gt;</code></pre>
+# ℹ 87,998 more rows</code></pre>
 </div>
 </div>
 </section>
-<section id="section-8" class="slide level2">
-<h2></h2>
+<section id="fit-model-with-random-smooths" class="slide level2">
+<h2>Fit model with random smooths</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>pdq_gam_4 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
-<span id="cb29-2"><a></a>  pupil_z <span class="sc">~</span></span>
-<span id="cb29-3"><a></a>    <span class="co"># Paramteric term</span></span>
-<span id="cb29-4"><a></a>    Age_o <span class="sc">+</span></span>
-<span id="cb29-5"><a></a>    <span class="co"># Reference smooth</span></span>
-<span id="cb29-6"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb29-7"><a></a>    <span class="co"># Difference smooth</span></span>
-<span id="cb29-8"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age_o, <span class="at">k =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb29-9"><a></a>    <span class="co"># Factor smooth interaction by subject</span></span>
-<span id="cb29-10"><a></a>    <span class="fu">s</span>(timebins, subject, <span class="at">bs =</span> <span class="st">"fs"</span>, <span class="at">m =</span> <span class="dv">1</span>),</span>
-<span id="cb29-11"><a></a>  <span class="at">data =</span> pdq_20</span>
-<span id="cb29-12"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>pdq_gam_4 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
+<span id="cb25-2"><a></a>  pupil_z <span class="sc">~</span></span>
+<span id="cb25-3"><a></a>    <span class="co"># Parametric term</span></span>
+<span id="cb25-4"><a></a>    Age <span class="sc">+</span></span>
+<span id="cb25-5"><a></a>    <span class="co"># Smooth term</span></span>
+<span id="cb25-6"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age) <span class="sc">+</span></span>
+<span id="cb25-7"><a></a>    <span class="co"># Factor smooth interaction by subject</span></span>
+<span id="cb25-8"><a></a>    <span class="fu">s</span>(timebins, subject, <span class="at">bs =</span> <span class="st">"fs"</span>, <span class="at">m =</span> <span class="dv">1</span>),</span>
+<span id="cb25-9"><a></a>  <span class="at">data =</span> pdq_20</span>
+<span id="cb25-10"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-9" class="slide level2">
-<h2></h2>
+<section id="summary-1" class="slide level2">
+<h2>Summary</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">summary</span>(pdq_gam_4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">summary</span>(pdq_gam_4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Family: gaussian 
 Link function: identity 
 
 Formula:
-pupil_z ~ Age_o + s(timebins, k = 20) + s(timebins, by = Age_o, 
-    k = 20) + s(timebins, subject, bs = "fs", m = 1)
+pupil_z ~ Age + s(timebins, by = Age) + s(timebins, subject, 
+    bs = "fs", m = 1)
 
 Parametric coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)  0.02904    0.06406   0.453    0.650
-Age_oOA     -0.06098    0.09061  -0.673    0.501
+(Intercept)  0.02897    0.06406   0.452    0.651
+AgeOA       -0.06099    0.09061  -0.673    0.501
 
 Approximate significance of smooth terms:
                         edf  Ref.df      F p-value
-s(timebins)          11.168  13.456  9.042  &lt;2e-16
-s(timebins):Age_oOA   1.124   1.144  0.014   0.973
-s(timebins,subject) 144.184 178.000 33.754  &lt;2e-16
+s(timebins):AgeYA     7.274   7.733  9.943  &lt;2e-16
+s(timebins):AgeOA     6.968   7.491  6.174  &lt;2e-16
+s(timebins,subject) 140.129 178.000 33.486  &lt;2e-16
 
-R-sq.(adj) =  0.0952   Deviance explained = 9.68%
-fREML = 1.2073e+05  Scale est. = 0.9048    n = 88008</code></pre>
+R-sq.(adj) =  0.0951   Deviance explained = 9.67%
+fREML = 1.2073e+05  Scale est. = 0.90486   n = 88008</code></pre>
 </div>
 </div>
 </section>
-<section id="section-10" class="slide level2">
-<h2></h2>
+<section id="plot-pupil-size-by-age" class="slide level2">
+<h2>Plot pupil size by <code>Age</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_4, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb32-2"><a></a>  <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Age_o"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_4, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="at">subject =</span> <span class="st">"1"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a></a>  <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Age"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-4-plot-1.png" width="960" class="r-stretch"></section>
-<section id="section-11" class="slide level2">
-<h2></h2>
+<section id="get-difference-by-age" class="slide level2">
+<h2>Get difference by <code>Age</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_4, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="at">Age_o =</span> <span class="st">"YA"</span>)) <span class="sc">%&gt;%</span> <span class="co"># filter only YA subjects</span></span>
-<span id="cb33-2"><a></a>  <span class="fu">filter</span>(subject <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)) <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>pdq_gam_4_diff <span class="ot">&lt;-</span> tidygam<span class="sc">::</span><span class="fu">get_difference</span>(</span>
+<span id="cb29-2"><a></a>  pdq_gam_4, <span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>,</span>
+<span id="cb29-3"><a></a>  <span class="at">compare =</span> <span class="fu">list</span>(<span class="at">Age =</span> <span class="fu">c</span>(<span class="st">"OA"</span>, <span class="st">"YA"</span>))</span>
+<span id="cb29-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-difference-by-age" class="slide level2">
+<h2>Plot difference by <code>Age</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>pdq_gam_4_diff <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="short_files/figure-revealjs/unnamed-chunk-3-1.png" width="960" class="r-stretch"></section>
+<section id="factor-smooth-interactions-by-subject" class="slide level2">
+<h2>Factor smooth interactions by subject</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">plot</span>(pdq_gam_4, <span class="at">select =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-4-plot-2-1.png" width="960" class="r-stretch"></section>
@@ -965,125 +905,138 @@ fREML = 1.2073e+05  Scale est. = 0.9048    n = 88008</code></pre>
 </div>
 <div class="fragment">
 <div class="box-tip">
-<p>We can get interaction-like comparisons by creating <strong>factor interactions</strong> and using them as <code>by</code>-variables.</p>
+<p>We can get interaction-like comparisons by creating <strong>factor interactions</strong> and using them as <code>by</code>-variables. (Note that factor interactions are <em>not</em> the same thing as factor <em>smooth</em> interactions).</p>
 </div>
 </div>
 </section>
-<section id="section-12" class="slide level2">
-<h2></h2>
+<section id="factor-interactions" class="slide level2">
+<h2>Factor interactions</h2>
 <div class="box-tip">
 <ul>
 <li><p>Let’s create a factor interaction between <code>Age</code> and <code>Condition</code>.</p></li>
-<li><p>We also need to make it into an ordered factor with treatment contrasts.</p></li>
-<li><p>Note that the model will include this factor interaction (no need for <code>Age</code> and <code>Condition</code>).</p></li>
+<li><p>Note that the model will include <strong>only</strong> this factor interaction (no need for <code>Age</code> and <code>Condition</code> separately).</p></li>
 </ul>
 </div>
+<p><br></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>pdq_20 <span class="ot">&lt;-</span> pdq_20 <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb34-3"><a></a>    <span class="at">Age_Cond =</span> <span class="fu">as.ordered</span>(<span class="fu">interaction</span>(Age, Condition))</span>
-<span id="cb34-4"><a></a>  )</span>
-<span id="cb34-5"><a></a></span>
-<span id="cb34-6"><a></a><span class="fu">contrasts</span>(pdq_20<span class="sc">$</span>Age_Cond) <span class="ot">&lt;-</span> <span class="st">"contr.treatment"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>pdq_20 <span class="ot">&lt;-</span> pdq_20 <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-3"><a></a>    <span class="at">Age_Cond =</span> <span class="fu">interaction</span>(Age, Condition)</span>
+<span id="cb32-4"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-13" class="slide level2">
-<h2></h2>
+<section id="fit-the-model-with-age_cond" class="slide level2">
+<h2>Fit the model with <code>Age_Cond</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>pdq_gam_5 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
-<span id="cb35-2"><a></a>  pupil_z <span class="sc">~</span></span>
-<span id="cb35-3"><a></a>    <span class="co"># Paramteric term</span></span>
-<span id="cb35-4"><a></a>    Age_Cond <span class="sc">+</span></span>
-<span id="cb35-5"><a></a>    <span class="co"># Reference smooth</span></span>
-<span id="cb35-6"><a></a>    <span class="fu">s</span>(timebins, <span class="at">k =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb35-7"><a></a>    <span class="co"># Difference smooth</span></span>
-<span id="cb35-8"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age_Cond, <span class="at">k =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb35-9"><a></a>    <span class="co"># Factor smooth interaction by subject</span></span>
-<span id="cb35-10"><a></a>    <span class="fu">s</span>(timebins, subject, <span class="at">bs =</span> <span class="st">"fs"</span>, <span class="at">m =</span> <span class="dv">1</span>),</span>
-<span id="cb35-11"><a></a>  <span class="at">data =</span> pdq_20</span>
-<span id="cb35-12"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>pdq_gam_5 <span class="ot">&lt;-</span> <span class="fu">bam</span>(</span>
+<span id="cb33-2"><a></a>  pupil_z <span class="sc">~</span></span>
+<span id="cb33-3"><a></a>    <span class="co"># Parametric term</span></span>
+<span id="cb33-4"><a></a>    Age_Cond <span class="sc">+</span></span>
+<span id="cb33-5"><a></a>    <span class="co"># Smooth term</span></span>
+<span id="cb33-6"><a></a>    <span class="fu">s</span>(timebins, <span class="at">by =</span> Age_Cond, <span class="at">k =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a></a>    <span class="co"># Factor smooth interaction by subject</span></span>
+<span id="cb33-8"><a></a>    <span class="fu">s</span>(timebins, subject, <span class="at">bs =</span> <span class="st">"fs"</span>, <span class="at">m =</span> <span class="dv">1</span>),</span>
+<span id="cb33-9"><a></a>  <span class="at">data =</span> pdq_20</span>
+<span id="cb33-10"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-14" class="slide level2">
-<h2></h2>
+<section id="model-summary" class="slide level2">
+<h2>Model summary</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">summary</span>(pdq_gam_5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">summary</span>(pdq_gam_5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Family: gaussian 
 Link function: identity 
 
 Formula:
-pupil_z ~ Age_Cond + s(timebins, k = 20) + s(timebins, by = Age_Cond, 
-    k = 20) + s(timebins, subject, bs = "fs", m = 1)
+pupil_z ~ Age_Cond + s(timebins, by = Age_Cond, k = 20) + s(timebins, 
+    subject, bs = "fs", m = 1)
 
 Parametric coefficients:
                    Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)        0.003526   0.064261   0.055    0.956
-Age_CondOA.Sparse -0.036832   0.090907  -0.405    0.685
-Age_CondYA.Dense   0.047145   0.008803   5.356 8.54e-08
-Age_CondOA.Dense  -0.034121   0.090892  -0.375    0.707
+(Intercept)        0.003547   0.064262   0.055    0.956
+Age_CondOA.Sparse -0.037032   0.090907  -0.407    0.684
+Age_CondYA.Dense   0.047044   0.008803   5.344 9.12e-08
+Age_CondOA.Dense  -0.034171   0.090893  -0.376    0.707
 
 Approximate significance of smooth terms:
                                   edf  Ref.df      F  p-value
-s(timebins)                    11.184  13.466  8.688  &lt; 2e-16
-s(timebins):Age_CondOA.Sparse   1.000   1.000  0.017    0.896
-s(timebins):Age_CondYA.Dense    4.828   6.013  4.901 5.43e-05
-s(timebins):Age_CondOA.Dense    1.445   1.757  0.301    0.748
-s(timebins,subject)           144.284 178.000 33.809  &lt; 2e-16
+s(timebins):Age_CondYA.Sparse   8.711  10.672  6.237  &lt; 2e-16
+s(timebins):Age_CondOA.Sparse   5.027   6.040  3.191 0.003875
+s(timebins):Age_CondYA.Dense    8.002   9.779  6.464  &lt; 2e-16
+s(timebins):Age_CondOA.Dense    6.191   7.582  4.061 0.000126
+s(timebins,subject)           144.275 178.000 33.697  &lt; 2e-16
 
-R-sq.(adj) =  0.0958   Deviance explained = 9.75%
-fREML = 1.2072e+05  Scale est. = 0.90421   n = 88008</code></pre>
+R-sq.(adj) =  0.0958   Deviance explained = 9.76%
+fREML = 1.2073e+05  Scale est. = 0.9042    n = 88008</code></pre>
 </div>
 </div>
 </section>
-<section id="section-15" class="slide level2">
-<h2></h2>
+<section id="plot-predictions-by-age_cond" class="slide level2">
+<h2>Plot predictions by <code>Age_Cond</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_5, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb38-2"><a></a>  <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Age_Cond"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">predict_gam</span>(pdq_gam_5, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="at">subject =</span> <span class="st">"1"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a></a>  <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Age_Cond"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-5-plot-1.png" width="960" class="r-stretch"></section>
-<section id="section-16" class="slide level2">
-<h2></h2>
+<section id="separate-age_cond" class="slide level2">
+<h2>Separate <code>Age_Cond</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>pdq_gam_5_pred_2 <span class="ot">&lt;-</span> <span class="fu">predict_gam</span>(</span>
-<span id="cb39-2"><a></a>  pdq_gam_5, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>,</span>
-<span id="cb39-3"><a></a>  <span class="at">separate =</span> <span class="fu">list</span>(<span class="at">Age_Cond =</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Condition"</span>))</span>
-<span id="cb39-4"><a></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-5"><a></a>  <span class="co"># The separate arguments returns variables with default alphabetical order.</span></span>
-<span id="cb39-6"><a></a>  <span class="co"># Let's reorder the levels in Condition and Age.</span></span>
-<span id="cb39-7"><a></a>  <span class="fu">mutate</span>(</span>
-<span id="cb39-8"><a></a>    <span class="at">Condition =</span> <span class="fu">factor</span>(Condition, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Sparse"</span>, <span class="st">"Dense"</span>)),</span>
-<span id="cb39-9"><a></a>    <span class="at">Age =</span> <span class="fu">factor</span>(Age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"YA"</span>, <span class="st">"OA"</span>)),</span>
-<span id="cb39-10"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>pdq_gam_5_pred_2 <span class="ot">&lt;-</span> <span class="fu">predict_gam</span>(</span>
+<span id="cb37-2"><a></a>  pdq_gam_5, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>,</span>
+<span id="cb37-3"><a></a>  <span class="at">values =</span> <span class="fu">c</span>(<span class="at">subject =</span> <span class="st">"1"</span>),</span>
+<span id="cb37-4"><a></a>  <span class="at">separate =</span> <span class="fu">list</span>(<span class="at">Age_Cond =</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Condition"</span>))</span>
+<span id="cb37-5"><a></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-6"><a></a>  <span class="co"># The separate arguments returns variables with default alphabetical order.</span></span>
+<span id="cb37-7"><a></a>  <span class="co"># Let's reorder the levels in Condition and Age.</span></span>
+<span id="cb37-8"><a></a>  <span class="fu">mutate</span>(</span>
+<span id="cb37-9"><a></a>    <span class="at">Condition =</span> <span class="fu">factor</span>(Condition, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Sparse"</span>, <span class="st">"Dense"</span>)),</span>
+<span id="cb37-10"><a></a>    <span class="at">Age =</span> <span class="fu">factor</span>(Age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"YA"</span>, <span class="st">"OA"</span>)),</span>
+<span id="cb37-11"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-17" class="slide level2">
-<h2></h2>
+<section id="plot-predictions-by-condition-for-each-age-group" class="slide level2">
+<h2>Plot predictions by <code>Condition</code> for each <code>Age</code> group</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>pdq_gam_5_pred_2 <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Condition"</span>) <span class="sc">+</span> <span class="fu">facet_grid</span>(<span class="sc">~</span> Age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>pdq_gam_5_pred_2 <span class="sc">%&gt;%</span> <span class="fu">plot</span>(<span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">comparison =</span> <span class="st">"Condition"</span>) <span class="sc">+</span> <span class="fu">facet_grid</span>(<span class="sc">~</span> Age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="short_files/figure-revealjs/pdq-gam-5-pred-2-plot-1.png" width="960" class="r-stretch"></section>
-<section id="section-18" class="slide level2">
-<h2></h2>
+<section id="get-difference-in-age-ya" class="slide level2">
+<h2>Get difference in <code>Age = YA</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>pdq_gam_5_diff <span class="ot">&lt;-</span> <span class="fu">get_difference</span>(</span>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>pdq_gam_5_diff <span class="ot">&lt;-</span> <span class="fu">get_difference</span>(</span>
+<span id="cb39-2"><a></a>  pdq_gam_5, <span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>,</span>
+<span id="cb39-3"><a></a>  <span class="at">compare =</span> <span class="fu">list</span>(<span class="at">Age_Cond =</span> <span class="fu">c</span>(<span class="st">"YA.Dense"</span>, <span class="st">"YA.Sparse"</span>))</span>
+<span id="cb39-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-difference-in-age-ya" class="slide level2">
+<h2>Plot difference in <code>Age = YA</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>pdq_gam_5_diff <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="short_files/figure-revealjs/pdq-gam-5-diff-plot-1.png" width="960" class="r-stretch"></section>
+<section id="get-difference-in-age-oa" class="slide level2">
+<h2>Get difference in <code>Age = OA</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>pdq_gam_5_diff_2 <span class="ot">&lt;-</span> <span class="fu">get_difference</span>(</span>
 <span id="cb41-2"><a></a>  pdq_gam_5, <span class="at">series =</span> <span class="st">"timebins"</span>, <span class="at">length_out =</span> <span class="dv">100</span>, <span class="at">exclude_terms =</span> <span class="st">"s(timebins,subject)"</span>,</span>
-<span id="cb41-3"><a></a>  <span class="at">compare =</span> <span class="fu">list</span>(<span class="at">Age_Cond =</span> <span class="fu">c</span>(<span class="st">"YA.Dense"</span>, <span class="st">"YA.Sparse"</span>))</span>
+<span id="cb41-3"><a></a>  <span class="at">compare =</span> <span class="fu">list</span>(<span class="at">Age_Cond =</span> <span class="fu">c</span>(<span class="st">"OA.Dense"</span>, <span class="st">"OA.Sparse"</span>))</span>
 <span id="cb41-4"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="section-19" class="slide level2">
-<h2></h2>
+<section id="plot-difference-in-age-oa" class="slide level2">
+<h2>Plot difference in <code>Age = OA</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>pdq_gam_5_diff <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>pdq_gam_5_diff_2 <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 
-<img data-src="short_files/figure-revealjs/pdq-gam-5-diff-plot-1.png" width="960" class="r-stretch"><div class="quarto-auto-generated-content">
+<img data-src="short_files/figure-revealjs/pdq-gam-5-diff-plot-2-1.png" width="960" class="r-stretch"><div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>

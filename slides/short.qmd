@@ -125,7 +125,6 @@ pdq_20 <- readRDS("data/pdq_20.rds") %>%
     Age = factor(Age, levels = c("YA", "OA")),
     pupil_z = (pupil.binned - mean(pupil.binned)) / sd(pupil.binned)
   )
-
 pdq_20
 ```
 
@@ -250,14 +249,19 @@ predict_gam(pdq_gam_2, length_out = 100) %>% plot(series = "timebins")
 * Comparing levels from a variable (like age: young vs old) can be achieved with the **`by`-variable method**,
 
     * i.e. by specifying the variable as the value of the `by` argument in `s()`.
+    
+* `by`-variables have to be **factors**.
 :::
 
 . . .
 
-```{r pdq-gam-3a, cache=TRUE}
-pdq_gam_3a <- bam(
+<br>
+
+```{r pdq-gam-3, cache=TRUE}
+pdq_gam_3 <- bam(
   pupil_z ~
-    s(timebins, by = Age, k = 20),
+    Age +
+    s(timebins, by = Age),
   data = pdq_20
 )
 ```
@@ -265,110 +269,32 @@ pdq_gam_3a <- bam(
 ## Summary
 
 ```{r pdq-gam-3a-sum}
-summary(pdq_gam_3a)
+summary(pdq_gam_3)
 ```
 
-. . .
-
-**But what about comparing YA and OA?**
-
-## Compare levels
-
-::: box-tip
-To compare levels to a reference level:
-
-* Change factor to an **ordered factor**.
-
-* Change factor contrasts to **treatment contrasts** (`contr.treatment`).
-    * The default in ordered factors is `contr.poly`, this won't work.
-    
-* Include the factor as a **parametric term**.
-
-* Include a **reference smooth** and a **difference smooth** with the `by`-variable.
-:::
-
-## 
-
-```{r pbq-ord}
-pdq_20 <- pdq_20 %>%
-  mutate(
-    # Make the variables into an ordered factor
-    Condition_o = as.ordered(Condition),
-    Age_o = as.ordered(Age)
-  )
-
-# Change the contrasts to treatment
-contrasts(pdq_20$Condition_o) <- "contr.treatment"
-contrasts(pdq_20$Age_o) <- "contr.treatment"
-```
-
-
-## 
-
-Let's start with `Age_o`.
-
-```{r pdq-gam-3, cache=TRUE}
-pdq_gam_3 <- bam(
-  pupil_z ~
-    # Parametric term
-    Age_o +
-    # Reference smooth (Age_0 == "YA")
-    s(timebins, k = 20) +
-    # Difference smooth ("OA" - "YA")
-    s(timebins, by = Age_o, k = 20),
-  data = pdq_20
-)
-```
-
-## 
-
-```{r pdq-gam-3-sum, echo=FALSE}
-cat(capture.output(summary(pdq_gam_3))[9:17], sep = "\n")
-```
-
-. . .
-
-<br>
-
-* `Intercept`: mean height when Age == "YA".
-
-* `Age_oOA`: height difference between "OA" and "YA".
-
-* `s(timebins)`: EDF > 1 = trajectory is not a straight line.
-
-* `s(timebins):Age_oOA`: EDF > 1 = trajectory of "OA" is different from "YA".
-
-## 
+## Plot predictions of groups
 
 ```{r pdq-gam-3-plot}
-predict_gam(pdq_gam_3, length_out = 100) %>% plot(series = "timebins", comparison = "Age_o")
+predict_gam(pdq_gam_3, length_out = 100) %>% plot(series = "timebins", comparison = "Age")
 ```
 
-## 
+## Get difference between curves
 
 ```{r pdq-gam-3-diff}
 pdq_gam_3_diff <- get_difference(
   pdq_gam_3, series = "timebins", length_out = 100,
-  compare = list(Age_o = c("OA", "YA"))
+  compare = list(Age = c("OA", "YA"))
 )
 pdq_gam_3_diff
 ```
 
-## 
+## Plot difference between curves
 
 ```{r pdq-gam-3-diff-plot}
 pdq_gam_3_diff %>% plot()
 ```
 
-
-
-
-
-
-
 ## Random effects
-
-
 
 ::: box-tip
 Only **fixed effects** so far...
@@ -389,7 +315,7 @@ Two ways of including random effects:
 * Include a **random smooth** term with the **factor smooth interaction** as basis (`bs = "fs"`).
 :::
 
-## 
+## Random effects with "factor smooth interactions"
 
 ::: box-tip
 **Factor smooth interaction**:
@@ -400,9 +326,9 @@ Two ways of including random effects:
 The random effect variable *needs to be a factor*.
 :::
 
-## 
+## Subject as factor
 
-Let's change `subject` to a factor (no need to make it an ordered factor).
+Let's change `subject` to a factor.
 
 ```{r pdq-fac}
 pdq_20 <- pdq_20 %>%
@@ -412,52 +338,58 @@ pdq_20 <- pdq_20 %>%
 pdq_20
 ```
 
-## 
-
+## Fit model with random smooths
 
 ```{r pdq-gam-4, cache=TRUE}
 pdq_gam_4 <- bam(
   pupil_z ~
-    # Paramteric term
-    Age_o +
-    # Reference smooth
-    s(timebins, k = 20) +
-    # Difference smooth
-    s(timebins, by = Age_o, k = 20) +
+    # Parametric term
+    Age +
+    # Smooth term
+    s(timebins, by = Age) +
     # Factor smooth interaction by subject
     s(timebins, subject, bs = "fs", m = 1),
   data = pdq_20
 )
 ```
 
-## 
+## Summary
 
 ```{r pdq-gam-4-sum}
 summary(pdq_gam_4)
 ```
 
-## 
+## Plot pupil size by `Age`
 
 ```{r pdq-gam-4-plot}
-predict_gam(pdq_gam_4, length_out = 100, exclude_terms = "s(timebins,subject)") %>%
-  plot(series = "timebins", comparison = "Age_o")
+predict_gam(pdq_gam_4, length_out = 100, exclude_terms = "s(timebins,subject)", values = c(subject = "1")) %>%
+  plot(series = "timebins", comparison = "Age")
 ```
 
-## 
+## Get difference by `Age`
+
+```{r}
+pdq_gam_4_diff <- tidygam::get_difference(
+  pdq_gam_4, series = "timebins", length_out = 100, exclude_terms = "s(timebins,subject)",
+  compare = list(Age = c("OA", "YA"))
+)
+```
+
+## Plot difference by `Age`
+
+```{r}
+pdq_gam_4_diff %>% plot()
+```
+
+
+## Factor smooth interactions by subject
 
 ```{r pdq-gam-4-plot-2}
-predict_gam(pdq_gam_4, length_out = 100, values = c(Age_o = "YA")) %>% # filter only YA subjects
-  filter(subject %in% c(1:10)) %>% plot(series = "timebins")
+plot(pdq_gam_4, select = 3)
 ```
-
-
-
-
 
 
 ## Comparing across groups (interactions)
-
-
 
 ::: box-tip
 Technically, GAMs **don't allow interactions**.
@@ -468,39 +400,35 @@ Technically, GAMs **don't allow interactions**.
 . . .
 
 ::: box-tip
-We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables.
+We can get interaction-like comparisons by creating **factor interactions** and using them as `by`-variables. (Note that factor interactions are *not* the same thing as factor *smooth* interactions).
 :::
 
-## 
+## Factor interactions
 
 ::: box-tip
 * Let's create a factor interaction between `Age` and `Condition`.
 
-* We also need to make it into an ordered factor with treatment contrasts.
-
-* Note that the model will include this factor interaction (no need for `Age` and `Condition`).
+* Note that the model will include **only** this factor interaction (no need for `Age` and `Condition` separately).
 
 :::
+
+<br>
 
 ```{r pdq-int}
 pdq_20 <- pdq_20 %>%
   mutate(
-    Age_Cond = as.ordered(interaction(Age, Condition))
+    Age_Cond = interaction(Age, Condition)
   )
-
-contrasts(pdq_20$Age_Cond) <- "contr.treatment"
 ```
 
-## 
+## Fit the model with `Age_Cond`
 
 ```{r pdq-gam-5, cache=TRUE}
 pdq_gam_5 <- bam(
   pupil_z ~
-    # Paramteric term
+    # Parametric term
     Age_Cond +
-    # Reference smooth
-    s(timebins, k = 20) +
-    # Difference smooth
+    # Smooth term
     s(timebins, by = Age_Cond, k = 20) +
     # Factor smooth interaction by subject
     s(timebins, subject, bs = "fs", m = 1),
@@ -508,25 +436,25 @@ pdq_gam_5 <- bam(
 )
 ```
 
-## 
+## Model summary
 
 ```{r pdq-gam-5-sum}
 summary(pdq_gam_5)
 ```
 
-## 
-
+## Plot predictions by `Age_Cond`
 
 ```{r pdq-gam-5-plot}
-predict_gam(pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)") %>%
+predict_gam(pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)", values = c(subject = "1")) %>%
   plot(series = "timebins", comparison = "Age_Cond")
 ```
 
-## 
+## Separate `Age_Cond`
 
 ```{r pdq-gam-5-plot-2}
 pdq_gam_5_pred_2 <- predict_gam(
   pdq_gam_5, length_out = 100, exclude_terms = "s(timebins,subject)",
+  values = c(subject = "1"),
   separate = list(Age_Cond = c("Age", "Condition"))
 ) %>%
   # The separate arguments returns variables with default alphabetical order.
@@ -537,13 +465,13 @@ pdq_gam_5_pred_2 <- predict_gam(
   )
 ```
 
-## 
+## Plot predictions by `Condition` for each `Age` group
 
 ```{r pdq-gam-5-pred-2-plot}
 pdq_gam_5_pred_2 %>% plot(series = "timebins", comparison = "Condition") + facet_grid(~ Age)
 ```
 
-## 
+## Get difference in `Age = YA`
 
 
 ```{r pdq-gam-5-diff}
@@ -553,10 +481,24 @@ pdq_gam_5_diff <- get_difference(
 )
 ```
 
-## 
+## Plot difference in `Age = YA`
 
 ```{r pdq-gam-5-diff-plot}
 pdq_gam_5_diff %>% plot()
 ```
 
+## Get difference in `Age = OA`
 
+
+```{r pdq-gam-5-diff-2}
+pdq_gam_5_diff_2 <- get_difference(
+  pdq_gam_5, series = "timebins", length_out = 100, exclude_terms = "s(timebins,subject)",
+  compare = list(Age_Cond = c("OA.Dense", "OA.Sparse"))
+)
+```
+
+## Plot difference in `Age = OA`
+
+```{r pdq-gam-5-diff-plot-2}
+pdq_gam_5_diff_2 %>% plot()
+```
